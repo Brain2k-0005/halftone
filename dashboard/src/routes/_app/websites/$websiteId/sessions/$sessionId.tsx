@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router"
 import {
   ActivityIcon,
   ArrowLeftIcon,
@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useApi } from "@/lib/api-client"
-import { formatDuration, formatNumber } from "@/lib/format"
+import { formatDuration, formatNumber, safeSiteUrl } from "@/lib/format"
 import { useWebsiteQuery } from "@/lib/website-query"
 
 export const Route = createFileRoute(
@@ -274,14 +274,7 @@ function Timeline({
                   ) : (
                     <>
                       Viewed page{" "}
-                      <a
-                        href={`//${a.hostname}${a.urlPath}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="font-semibold hover:underline"
-                      >
-                        {a.urlPath}
-                      </a>
+                      <PageLink hostname={a.hostname} path={a.urlPath} />
                     </>
                   )}
                 </span>
@@ -348,5 +341,30 @@ function EventProps({
         )}
       </DialogContent>
     </Dialog>
+  )
+}
+
+const websiteRoute = getRouteApi("/_app/websites/$websiteId")
+
+/** Links only to pages on the website's own domain; tracker data is untrusted, anything else stays plain text. */
+function PageLink({
+  hostname,
+  path,
+}: {
+  hostname?: string | null
+  path?: string | null
+}) {
+  const { website } = websiteRoute.useLoaderData()
+  const href = safeSiteUrl(website.domain, hostname, path)
+  if (!href) return <span className="font-semibold">{path}</span>
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className="font-semibold hover:underline"
+    >
+      {path}
+    </a>
   )
 }

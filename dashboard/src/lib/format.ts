@@ -46,3 +46,53 @@ export function formatAxis(value: number) {
   if (Math.abs(value) >= 1000) return `${Number((value / 1000).toFixed(1))}K`
   return String(value)
 }
+
+/**
+ * Builds a safe absolute URL for a tracked page. Hostname and path come from tracker data, which anyone
+ * can send to /api/send, so only http(s) URLs on the website's configured domain (or a subdomain) pass.
+ */
+export function safeSiteUrl(
+  domain: string,
+  hostname: string | null | undefined,
+  path: string | null | undefined
+) {
+  if (
+    !path ||
+    !path.startsWith("/") ||
+    path.startsWith("//") ||
+    path.includes("\\")
+  )
+    return null
+  const site = domain
+    .replace(/^https?:\/\//, "")
+    .replace(/\/.*$/, "")
+    .toLowerCase()
+  const host = (hostname || site).toLowerCase()
+  if (host !== site && !host.endsWith(`.${site}`)) return null
+  try {
+    const url = new URL(path, `https://${host}`)
+    return url.protocol === "https:" && url.hostname === host
+      ? url.toString()
+      : null
+  } catch {
+    return null
+  }
+}
+
+/** True when `url` is an http(s) URL whose host is the website's domain or one of its subdomains. */
+export function isOnSiteDomain(url: string, domain: string) {
+  try {
+    const u = new URL(url)
+    const site = domain
+      .replace(/^https?:\/\//, "")
+      .replace(/\/.*$/, "")
+      .toLowerCase()
+    const host = u.hostname.toLowerCase()
+    return (
+      (u.protocol === "https:" || u.protocol === "http:") &&
+      (host === site || host.endsWith(`.${site}`))
+    )
+  } catch {
+    return false
+  }
+}

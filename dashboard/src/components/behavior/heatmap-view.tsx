@@ -8,7 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { formatNumber } from "@/lib/format"
+import { getRouteApi } from "@tanstack/react-router"
+import { formatNumber, isOnSiteDomain } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 /*
@@ -175,6 +176,8 @@ function snapshotHeight(s: HeatmapSnapshot) {
   return s.pageH <= s.viewportH * 1.25 ? s.viewportH : s.pageH
 }
 
+const websiteRoute = getRouteApi("/_app/websites/$websiteId")
+
 function Frame({
   snapshot,
   renderWidth,
@@ -189,6 +192,7 @@ function Frame({
   children: React.ReactNode
 }) {
   const { ref, scale } = useFit(renderWidth)
+  const { website } = websiteRoute.useLoaderData()
   const [ready, setReady] = useState(!snapshot)
 
   useEffect(() => {
@@ -218,8 +222,11 @@ function Frame({
               transform: `scale(${scale})`,
             }}
           >
-            {snapshot && (
+            {snapshot && isOnSiteDomain(snapshot.url, website.domain) && (
               <iframe
+                // The URL is built from a tracked path: only the site's own domain is framed, and the sandbox
+                // blocks top-level navigation, popups and forms from the framed page.
+                sandbox="allow-scripts allow-same-origin"
                 src={snapshot.url}
                 title={snapshot.url}
                 tabIndex={-1}
