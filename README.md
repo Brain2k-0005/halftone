@@ -1,10 +1,7 @@
-> **umami-reui** — a fork of [Umami](https://github.com/umami-software/umami) with a modern,
-> ReUI-inspired redesign: near-black zinc surfaces, hairline borders, a violet accent,
-> segmented tabs and dithered card backgrounds. Backend, tracker and API are unchanged.
->
-> The redesign lives in [`src/app/reui.css`](src/app/reui.css) (theme tokens + Zen `data-slot`
-> overrides) plus small class hooks in the shell, panel and metric components, so upstream
-> releases can be merged with `git fetch upstream && git merge upstream/master`.
+> **umami-reui** — a fork of [Umami](https://github.com/umami-software/umami) with a brand-new
+> frontend in [`dashboard/`](dashboard): **TanStack Start + shadcn/ReUI**, a ReUI-style app shell
+> (sidebar, ⌘K, theme toggle) and dot-dithered cards. The Umami server in this repository stays the
+> backend (tracker, database, REST API). See [`dashboard/README.md`](dashboard/README.md).
 
 <p align="center">
   <img src="https://content.umami.is/website/images/umami-logo.png" alt="Umami Logo" width="100">
