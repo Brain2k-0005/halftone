@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start"
 import { redirect } from "@tanstack/react-router"
+import { getCookie } from "@tanstack/react-start/server"
 import { clearToken, storeToken, umami, UmamiError } from "@/server/umami"
+import { TEAM_COOKIE } from "@/lib/team"
 import { isRange, resolveRange, type RangeKey } from "@/lib/range"
 
 export interface User {
@@ -9,6 +11,28 @@ export interface User {
   role: string
   isAdmin: boolean
 }
+
+export interface Team {
+  id: string
+  name: string
+  accessCode?: string
+}
+
+/** Websites of the selected workspace: a team (cookie) or the user's personal websites. */
+function websitesPath() {
+  const teamId = getCookie(TEAM_COOKIE)
+  return teamId && /^[0-9a-f-]{36}$/i.test(teamId) ? `/teams/${teamId}/websites` : "/websites"
+}
+
+export const teamsFn = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const res = await umami<{ data: Team[] }>("/me/teams", { query: { pageSize: 100 } })
+    const teamId = getCookie(TEAM_COOKIE) ?? null
+    return { teams: res.data, teamId: res.data.some((t) => t.id === teamId) ? teamId : null }
+  } catch {
+    return { teams: [] as Team[], teamId: null }
+  }
+})
 
 export interface Website {
   id: string
@@ -123,7 +147,7 @@ async function guard<T>(fn: () => Promise<T>) {
 
 export const websitesFn = createServerFn({ method: "GET" }).handler(() =>
   guard(async () => {
-    const res = await umami<{ data: Website[] }>("/websites", {
+    const res = await umami<{ data: Website[] }>(websitesPath(), {
       query: { pageSize: 200 },
     })
     // Online visitors per site feed the sidebar's quick access counters.
@@ -156,7 +180,7 @@ export const websitesSummaryFn = createServerFn({ method: "GET" })
   .validator((d: { range: RangeKey }) => ({ range: validateRange(d.range) }))
   .handler(({ data }) =>
     guard(async () => {
-      const { data: sites } = await umami<{ data: Website[] }>("/websites", {
+      const { data: sites } = await umami<{ data: Website[] }>(websitesPath(), {
         query: { pageSize: 200 },
       })
       const q = rangeQuery(data.range)

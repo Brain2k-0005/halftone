@@ -22,7 +22,7 @@ import {
 } from "@/components/app/command-menu"
 import { ThemeToggle } from "@/components/app/theme"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
-import { logoutFn, meFn, websitesFn } from "@/lib/api"
+import { logoutFn, meFn, teamsFn, websitesFn } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_app")({
@@ -31,10 +31,10 @@ export const Route = createFileRoute("/_app")({
     if (!user) throw redirect({ to: "/login" })
     return { user }
   },
-  loader: async ({ context }) => ({
-    user: context.user,
-    websites: await websitesFn(),
-  }),
+  loader: async ({ context }) => {
+    const [websites, { teams, teamId }] = await Promise.all([websitesFn(), teamsFn()])
+    return { user: context.user, websites, teams, teamId }
+  },
   component: AppLayout,
 })
 
@@ -134,7 +134,7 @@ function TopBar({ onMenu }: { onMenu: () => void }) {
 const COLLAPSED_KEY = "umami-sidebar-collapsed"
 
 function AppLayout() {
-  const { user, websites } = Route.useLoaderData()
+  const { user, websites, teams, teamId } = Route.useLoaderData()
   const router = useRouter()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -167,6 +167,8 @@ function AppLayout() {
         >
           <SidebarNav
             user={user}
+            teams={teams}
+            teamId={teamId}
             websites={websites}
             collapsed={collapsed}
             onToggle={toggleCollapsed}
@@ -182,6 +184,8 @@ function AppLayout() {
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <SidebarNav
               user={user}
+              teams={teams}
+              teamId={teamId}
               websites={websites}
               collapsed={false}
               onLogout={logout}

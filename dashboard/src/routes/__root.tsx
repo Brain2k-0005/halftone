@@ -1,5 +1,8 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { themeScript } from "@/components/app/theme"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { useState } from "react"
+import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
 import appCss from "../styles.css?url"
@@ -49,9 +52,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <TooltipProvider>{children}</TooltipProvider>
+        <Providers>{children}</Providers>
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function Providers({ children }: { children: React.ReactNode }) {
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },
+      })
+  )
+  return (
+    <QueryClientProvider client={client}>
+      <TooltipProvider>{children}</TooltipProvider>
+      <Toaster position="bottom-right" />
+    </QueryClientProvider>
   )
 }
