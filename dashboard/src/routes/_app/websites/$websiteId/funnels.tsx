@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { FilterIcon, PlusIcon, XIcon } from "lucide-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Pill, SectionCard } from "@/components/app/section-card"
 import {
@@ -120,21 +120,24 @@ function FunnelDialog({
         ]
   const [steps, setSteps] = useState<StepDraft[]>(draft)
 
+  // The dialog stays mounted: start from the saved steps (or two empty ones) every time it opens.
+  useEffect(() => {
+    if (open) setSteps(draft())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   return (
     <FormDialog
       wide
       open={open}
-      onOpenChange={(o) => {
-        if (o) setSteps(draft())
-        onOpenChange(o)
-      }}
+      onOpenChange={onOpenChange}
       title={funnel ? "Edit funnel" : "Create funnel"}
       description="Visitors move through the steps in order, within the time window."
       submitLabel={funnel ? "Save" : "Create funnel"}
       onSubmit={async (f) => {
         await save.mutateAsync({
           name: String(f.get("name")).trim(),
-          description: String(f.get("description") ?? "").trim() || undefined,
+          description: String(f.get("description") ?? "").trim(),
           parameters: {
             window: Number(f.get("window")),
             steps: steps.map((s) => ({ type: s.type, value: s.value.trim() })),

@@ -1,8 +1,9 @@
 import { SectionCard } from "@/components/app/section-card"
 import { CopyField } from "@/components/app/ui-kit"
-import { UMAMI_URL } from "@/components/behavior/website-info"
+import { useUmamiPublicUrl } from "@/components/app/brand"
 
 export function TrackingCard({ websiteId }: { websiteId: string }) {
+  const UMAMI_URL = useUmamiPublicUrl()
   const code = `<script defer src="${UMAMI_URL}/script.js" data-website-id="${websiteId}"></script>`
   return (
     <SectionCard
@@ -14,8 +15,8 @@ export function TrackingCard({ websiteId }: { websiteId: string }) {
         <p className="text-xs text-muted-foreground">
           The tracker is served by your Umami server at{" "}
           <span className="font-mono">{UMAMI_URL}</span>. Set{" "}
-          <span className="font-mono">VITE_UMAMI_URL</span> to change the host
-          shown here.
+          <span className="font-mono">UMAMI_PUBLIC_URL</span> on the dashboard
+          server to change it.
         </p>
       </div>
     </SectionCard>

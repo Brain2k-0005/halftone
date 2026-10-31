@@ -42,13 +42,14 @@ import { cn } from "@/lib/utils"
  * the user card at the bottom. All entries come from components/app/nav.ts.
  */
 
-const ROW =
+export const ROW =
   "relative flex h-8 w-full items-center gap-2.5 rounded-lg px-2.5 text-[13px] font-medium transition-colors"
-const IDLE =
+export const IDLE =
   "text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-fg-active)]"
-const ACTIVE = "bg-[var(--sidebar-active)] text-[var(--sidebar-fg-active)]"
+export const ACTIVE =
+  "bg-[var(--sidebar-active)] text-[var(--sidebar-fg-active)]"
 
-function Counter({ count }: { count: number }) {
+export function Counter({ count }: { count: number }) {
   if (count <= 0) return null
   return (
     <span className="tabular ml-auto inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-success-soft px-1.5 text-[11px] leading-none font-medium text-success">
@@ -57,7 +58,7 @@ function Counter({ count }: { count: number }) {
   )
 }
 
-function GroupLabel({
+export function GroupLabel({
   children,
   collapsed,
   first,
@@ -82,7 +83,7 @@ function GroupLabel({
   )
 }
 
-function NavRow({
+export function NavRow({
   icon: Icon,
   label,
   href,
@@ -129,18 +130,24 @@ function NavRow({
   )
 }
 
-function UserCard({
+export function UserCard({
   user,
   teams,
   teamId,
   collapsed,
   onLogout,
+  menuSide = "top",
+  menuAlign = "start",
+  className,
 }: {
   user: User
   teams: Team[]
   teamId: string | null
   collapsed: boolean
   onLogout: () => void
+  menuSide?: "top" | "right"
+  menuAlign?: "start" | "end"
+  className?: string
 }) {
   const { theme, toggle } = useTheme()
   const router = useRouter()
@@ -153,7 +160,7 @@ function UserCard({
   }
 
   return (
-    <div className="p-2">
+    <div className={cn("p-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
@@ -186,7 +193,11 @@ function UserCard({
             </button>
           }
         />
-        <DropdownMenuContent side="top" align="start" className="min-w-60">
+        <DropdownMenuContent
+          side={menuSide}
+          align={menuAlign}
+          className="min-w-60"
+        >
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium">{user.username}</p>
             <p className="text-xs text-muted-foreground capitalize">

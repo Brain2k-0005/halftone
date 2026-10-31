@@ -79,8 +79,12 @@ export async function api<T>(
     data: { method, path, query: query ?? undefined, body },
   })
   if (!res.ok) {
-    if (res.status === 401 && typeof window !== "undefined")
-      window.location.href = "/login"
+    // Umami also answers 401 for "no access to this team/website". Only an expired session sends the
+    // user to the sign-in page, so check the session itself before redirecting.
+    if (res.status === 401 && typeof window !== "undefined" && path !== "/me") {
+      const me = await apiFn({ data: { method: "GET", path: "/me" } })
+      if (!me.ok && me.status === 401) window.location.href = "/login"
+    }
     throw new ApiError(res.message, res.status)
   }
   return res.data as T

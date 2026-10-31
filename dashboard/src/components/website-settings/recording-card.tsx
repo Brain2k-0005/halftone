@@ -1,3 +1,4 @@
+import { useUmamiPublicUrl } from "@/components/app/brand"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { SectionCard } from "@/components/app/section-card"
@@ -8,7 +9,6 @@ import {
   TextField,
 } from "@/components/app/ui-kit"
 import {
-  UMAMI_URL,
   type ReplayConfig,
   type WebsiteInfo,
 } from "@/components/behavior/website-info"
@@ -87,6 +87,7 @@ function Rate({
 }
 
 export function RecordingCard({ website }: { website: WebsiteInfo }) {
+  const umamiUrl = useUmamiPublicUrl()
   const config: ReplayConfig = website.replayConfig ?? {}
   const [replayEnabled, setReplayEnabled] = useState(
     config.replayEnabled === true
@@ -155,7 +156,7 @@ export function RecordingCard({ website }: { website: WebsiteInfo }) {
     persist(next({ heatmapEnabled: v }), () => setHeatmapEnabled(!v))
   }
 
-  const code = `<script defer src="${UMAMI_URL}/recorder.js" data-website-id="${website.id}"></script>`
+  const code = `<script defer src="${umamiUrl}/recorder.js" data-website-id="${website.id}"></script>`
   const active = replayEnabled || heatmapEnabled
 
   return (

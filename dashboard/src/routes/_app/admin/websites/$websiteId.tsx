@@ -1,4 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router"
 import { ArrowLeftIcon } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -8,6 +13,7 @@ import {
   Button,
   ConfirmDialog,
   CopyField,
+  EmptyState,
   ErrorText,
   FormDialog,
   PageHeader,
@@ -18,7 +24,7 @@ import { useApi, useApiMutation } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/admin/websites/$websiteId")({
   staticData: { crumb: { label: "Website", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Website · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Website · Administration · Halftone" }] }),
   component: AdminWebsitePage,
 })
 
@@ -37,6 +43,7 @@ const LINK =
 function AdminWebsitePage() {
   const { websiteId } = Route.useParams()
   const navigate = useNavigate()
+  const router = useRouter() // the sidebar lists websites from the /_app loader
   const website = useApi<WebsiteDetail>(`/websites/${websiteId}`)
   const w = website.data
   const owner = useApi<{ username?: string; name?: string }>(
@@ -56,6 +63,22 @@ function AdminWebsitePage() {
   ])
 
   const ownerName = owner.data?.name ?? owner.data?.username
+
+  if (website.isSuccess && !w) {
+    return (
+      <SectionCard>
+        <EmptyState
+          title="Website not found"
+          description="It may have been deleted."
+          action={
+            <Link to="/admin/websites" className={LINK}>
+              <ArrowLeftIcon className="size-4" /> Back to list
+            </Link>
+          }
+        />
+      </SectionCard>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -136,6 +159,7 @@ function AdminWebsitePage() {
               domain: String(form.get("domain")).trim(),
             })
             toast.success("Website updated")
+            await router.invalidate()
           }}
         >
           <TextField
@@ -163,6 +187,7 @@ function AdminWebsitePage() {
         onConfirm={async () => {
           await remove.mutateAsync(undefined)
           toast.success("Website deleted")
+          await router.invalidate()
           await navigate({ to: "/admin/websites" })
         }}
       />

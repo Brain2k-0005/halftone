@@ -6,7 +6,7 @@ export const Route = createFileRoute("/_app/pixels/$pixelId")({
   validateSearch: validateWebsiteSearch,
   loader: ({ params }) => loadEntity("pixel", params.pixelId),
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.entity.name ?? "Pixel"} · Umami` }],
+    meta: [{ title: `${loaderData?.entity.name ?? "Pixel"} · Halftone` }],
   }),
   component: PixelPage,
 })

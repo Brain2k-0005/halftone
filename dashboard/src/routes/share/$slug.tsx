@@ -36,8 +36,8 @@ export const Route = createFileRoute("/share/$slug")({
       {
         title:
           loaderData?.status === "ok"
-            ? `${loaderData.name} · Umami`
-            : "Shared analytics · Umami",
+            ? `${loaderData.name} · Halftone`
+            : "Shared analytics · Halftone",
       },
     ],
   }),
@@ -152,12 +152,12 @@ function SharePage() {
       <footer className="px-4 pb-8 text-center text-xs text-muted-foreground">
         Powered by{" "}
         <a
-          href="https://umami.is"
+          href="https://github.com/Brain2k-0005/halftone"
           target="_blank"
           rel="noreferrer"
           className="font-medium text-foreground hover:underline"
         >
-          Umami
+          Halftone
         </a>
       </footer>
     </div>

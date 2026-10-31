@@ -1,6 +1,6 @@
 import { useParams } from "@tanstack/react-router"
 import { CalendarIcon, FilterIcon, PlusIcon, XIcon } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Segmented } from "@/components/app/section-card"
 import {
   Popover,
@@ -32,6 +32,12 @@ const RANGE_OPTIONS = (Object.keys(RANGES) as RangeKey[]).map((value) => ({
   label: RANGES[value].label,
 }))
 
+/* Browser-local day; only rendered after mount (server and browser time zones may differ). */
+const formatDay = (ms: number) => {
+  const d = new Date(ms)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+}
+
 const toDateInput = (ms: number) =>
   new Date(ms - new Date(ms).getTimezoneOffset() * 60_000)
     .toISOString()
@@ -40,6 +46,8 @@ const toDateInput = (ms: number) =>
 /** Presets ("24h | Week | Month | 90 D | Year") plus a custom range popover, bound to the URL. */
 export function DateRangeControl() {
   const { range, custom, dates } = useWebsiteQuery()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const set = useSetWebsiteSearch()
   const [open, setOpen] = useState(false)
   const [from, setFrom] = useState(toDateInput(dates.startAt))
@@ -73,7 +81,9 @@ export function DateRangeControl() {
             >
               <CalendarIcon className="size-3.5" />
               {custom
-                ? `${new Date(dates.startAt).toLocaleDateString()} – ${new Date(dates.endAt).toLocaleDateString()}`
+                ? mounted
+                  ? `${formatDay(dates.startAt)} – ${formatDay(dates.endAt)}`
+                  : "Custom range"
                 : "Custom"}
             </button>
           }

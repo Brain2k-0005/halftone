@@ -12,6 +12,7 @@ import { RangeSwitch } from "@/components/app/range-switch"
 import { Progress, SectionCard } from "@/components/app/section-card"
 import { StatGrid } from "@/components/app/stat"
 import { TrafficChart } from "@/components/app/traffic-chart"
+import { defaultRange } from "@/lib/default-range"
 import { websitesSummaryFn, type Point, type Stats } from "@/lib/api"
 import {
   formatDuration,
@@ -19,18 +20,12 @@ import {
   formatPercent,
   percentChange,
 } from "@/lib/format"
-import {
-  DEFAULT_RANGE,
-  isRange,
-  RANGES,
-  resolveRange,
-  type RangeKey,
-} from "@/lib/range"
+import { isRange, RANGES, resolveRange, type RangeKey } from "@/lib/range"
 
 export const Route = createFileRoute("/_app/")({
   validateSearch: (s: Record<string, unknown>): { range?: RangeKey } =>
     isRange(s.range) ? { range: s.range } : {},
-  loaderDeps: ({ search }) => ({ range: search.range ?? DEFAULT_RANGE }),
+  loaderDeps: ({ search }) => ({ range: search.range ?? defaultRange() }),
   loader: ({ deps }) => websitesSummaryFn({ data: { range: deps.range } }),
   staticData: { crumb: { label: "Overview", icon: "overview" } },
   component: OverviewPage,
@@ -47,7 +42,7 @@ function sumSeries(series: Point[][]) {
 
 function OverviewPage() {
   const sites = Route.useLoaderData()
-  const { range = DEFAULT_RANGE } = Route.useSearch()
+  const range = Route.useSearch().range ?? defaultRange()
   const navigate = useNavigate({ from: Route.fullPath })
   const unit = resolveRange(range).unit
 

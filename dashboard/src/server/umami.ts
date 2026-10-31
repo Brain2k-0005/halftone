@@ -10,6 +10,14 @@ export const UMAMI_API_URL = (
   process.env.UMAMI_API_URL ?? "http://localhost:3000/api"
 ).replace(/\/$/, "")
 
+/**
+ * Public origin of the Umami server (serves script.js, recorder.js, /q short links, /p pixels and /api/send).
+ * Differs from UMAMI_API_URL in Docker, where the dashboard reaches the API over the internal network.
+ */
+export const UMAMI_PUBLIC_URL = (
+  process.env.UMAMI_PUBLIC_URL ?? new URL(UMAMI_API_URL).origin
+).replace(/\/$/, "")
+
 export class UmamiError extends Error {
   constructor(
     message: string,
@@ -69,12 +77,7 @@ export async function umami<T>(
     const body = isJson
       ? await res.json().catch(() => null)
       : await res.text().catch(() => "")
-    const detail =
-      typeof body === "object" && body && "message" in body
-        ? String(body.message)
-        : typeof body === "object" && body && "error" in body
-          ? String(body.error)
-          : ""
+    const detail = errorMessage(body)
     if (!isJson)
       console.error(`[umami] ${res.status} ${path}`, String(body).slice(0, 500))
     throw new UmamiError(
@@ -85,4 +88,19 @@ export async function umami<T>(
   }
 
   return (await res.json()) as T
+}
+
+/** Umami returns `{ error: { message } }`, `{ error: "…" }` or `{ message }` depending on the route. */
+function errorMessage(body: unknown): string {
+  if (!body || typeof body !== "object") return ""
+  const b = body as { message?: unknown; error?: unknown }
+  if (typeof b.message === "string") return b.message
+  if (typeof b.error === "string") return b.error
+  if (
+    b.error &&
+    typeof b.error === "object" &&
+    typeof (b.error as { message?: unknown }).message === "string"
+  )
+    return (b.error as { message: string }).message
+  return ""
 }

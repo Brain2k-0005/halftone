@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_app/admin")({
     if (!context.user.isAdmin) throw redirect({ to: "/" })
   },
   staticData: { crumb: { label: "Administration", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Administration · Halftone" }] }),
   component: AdminLayout,
 })
 
@@ -16,7 +16,7 @@ function AdminLayout() {
     <div className="flex flex-col gap-5">
       <PageHeader
         title="Administration"
-        description="Users, teams, websites and security of this Umami instance"
+        description="Users, teams, websites and security of this instance"
       />
       <AreaTabs>
         {ADMIN_NAV.map((item) => (

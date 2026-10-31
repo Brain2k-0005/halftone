@@ -9,8 +9,8 @@ import {
 } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Segmented } from "@/components/app/section-card"
-import { StatGrid, type StatColumn } from "@/components/app/stat"
+import { DeltaPill, Segmented } from "@/components/app/section-card"
+import { changeText, type StatColumn } from "@/components/app/stat"
 import { countryName, flag, TopList } from "@/components/app/top-list"
 import { TrafficChart, type ChartMode } from "@/components/app/traffic-chart"
 import { Skeleton } from "@/components/app/ui-kit"
@@ -27,6 +27,7 @@ import {
   formatNumber,
   formatPercent,
   formatAxis,
+  percentChange,
 } from "@/lib/format"
 import { useWebsiteQuery } from "@/lib/website-query"
 import { cn } from "@/lib/utils"
@@ -48,6 +49,34 @@ function BlockError({ error }: { error: unknown }) {
     <p className="flex h-32 items-center justify-center px-5 text-center text-sm text-destructive">
       {error instanceof Error ? error.message : "Failed to load"}
     </p>
+  )
+}
+
+
+/**
+ * Stat cells that wrap by the width of their card (StatGrid breaks on the viewport width, which squeezes
+ * five columns into a narrow board column).
+ */
+function StatGrid({ columns }: { columns: StatColumn[] }) {
+  return (
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(9.5rem,1fr))]">
+      {columns.map((c) => {
+        const change = percentChange(c.current, c.previous)
+        return (
+          <div key={c.key} className="min-w-0 border-t px-5 py-4 first:border-l-0 [&:not(:first-child)]:border-l">
+            <p className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground">
+              <c.icon className="size-4 shrink-0" strokeWidth={1.75} />
+              <span className="truncate">{c.label}</span>
+            </p>
+            <p className="tabular mt-3 text-2xl leading-none font-semibold tracking-tight whitespace-nowrap">{c.value}</p>
+            <div className="mt-3 flex min-h-5 items-center gap-2 text-xs">
+              {change !== null && <DeltaPill value={change} invert={c.invert} />}
+              <span className="truncate text-muted-foreground">{changeText(c.current, c.previous)}</span>
+            </div>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 

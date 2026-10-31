@@ -18,7 +18,6 @@ import {
   TextField,
   type Column,
 } from "@/components/app/ui-kit"
-import { UMAMI_URL } from "@/components/behavior/website-info"
 import { Checkbox } from "@/components/ui/checkbox"
 import { api, useApi, type Paged } from "@/lib/api-client"
 
@@ -49,7 +48,9 @@ const SECTIONS = [
 
 const DEFAULT_ON = new Set(["overview", "events"])
 const label = (id: string) => id[0]!.toUpperCase() + id.slice(1)
-const shareUrl = (slug: string) => `${UMAMI_URL}/share/${slug}`
+/** Share pages are served by this dashboard (routes/share/$slug.tsx), not by the Umami server. */
+const shareUrl = (slug: string) =>
+  `${typeof window === "undefined" ? "" : window.location.origin}/share/${slug}`
 
 function ShareDialog({
   websiteId,

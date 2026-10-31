@@ -7,7 +7,7 @@ import { useApi, useApiMutation } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/admin/security")({
   staticData: { crumb: { label: "Security", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Security · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Security · Administration · Halftone" }] }),
   component: AdminSecurityPage,
 })
 

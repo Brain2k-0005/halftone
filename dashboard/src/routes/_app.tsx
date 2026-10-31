@@ -15,7 +15,9 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { Fragment, useEffect, useState } from "react"
+import { useAppearance } from "@/components/app/brand"
 import { SidebarNav } from "@/components/app/app-sidebar"
+import { DesktopShell } from "@/components/app/shells"
 import {
   CommandMenuProvider,
   useCommandMenu,
@@ -23,7 +25,6 @@ import {
 import { ThemeToggle } from "@/components/app/theme"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { logoutFn, meFn, teamsFn, websitesFn } from "@/lib/api"
-import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_app")({
   beforeLoad: async () => {
@@ -139,6 +140,7 @@ const COLLAPSED_KEY = "umami-sidebar-collapsed"
 function AppLayout() {
   const { user, websites, teams, teamId } = Route.useLoaderData()
   const router = useRouter()
+  const { appearance } = useAppearance()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -161,23 +163,16 @@ function AppLayout() {
 
   return (
     <CommandMenuProvider websites={websites} onLogout={logout}>
-      <div className="flex h-svh overflow-hidden">
-        <aside
-          className={cn(
-            "hidden shrink-0 overflow-hidden border-r border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] transition-[width] duration-200 ease-linear lg:block",
-            collapsed ? "w-14" : "w-[248px]"
-          )}
-        >
-          <SidebarNav
-            user={user}
-            teams={teams}
-            teamId={teamId}
-            websites={websites}
-            collapsed={collapsed}
-            onToggle={toggleCollapsed}
-            onLogout={logout}
-          />
-        </aside>
+      <DesktopShell
+        shell={appearance.shell}
+        user={user}
+        teams={teams}
+        teamId={teamId}
+        websites={websites}
+        collapsed={collapsed}
+        onToggle={toggleCollapsed}
+        onLogout={logout}
+      >
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent
             side="left"
@@ -196,15 +191,13 @@ function AppLayout() {
             />
           </SheetContent>
         </Sheet>
-        <div className="flex min-w-0 flex-1 flex-col">
-          <TopBar onMenu={() => setMobileOpen(true)} />
-          <main className="min-h-0 flex-1 overflow-y-auto px-4 pt-5 pb-10 lg:px-6 lg:py-6">
-            <div className="mx-auto w-full max-w-[1600px]">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-      </div>
+        <TopBar onMenu={() => setMobileOpen(true)} />
+        <main className="min-h-0 flex-1 overflow-y-auto px-4 pt-5 pb-10 lg:px-6 lg:py-6">
+          <div className="mx-auto w-full max-w-[1600px]">
+            <Outlet />
+          </div>
+        </main>
+      </DesktopShell>
     </CommandMenuProvider>
   )
 }

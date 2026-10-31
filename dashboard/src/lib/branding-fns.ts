@@ -1,11 +1,28 @@
 import { createServerFn } from "@tanstack/react-start"
+import { getCookie } from "@tanstack/react-start/server"
 import { readBranding, writeBranding } from "@/server/branding"
-import { umami } from "@/server/umami"
-import type { Branding } from "@/lib/branding"
+import { umami, UMAMI_PUBLIC_URL } from "@/server/umami"
+import {
+  APPEARANCE_KEY,
+  sanitizeAppearance,
+  type Branding,
+} from "@/lib/branding"
 
-/** Public: the login page and share pages need the brand too. */
-export const getBrandingFn = createServerFn({ method: "GET" }).handler(() =>
-  readBranding()
+/** Public: the login page and share pages need the brand too. Also returns the user's own appearance cookie. */
+export const getBrandingFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const branding = await readBranding()
+    const raw = getCookie(APPEARANCE_KEY)
+    let user = null
+    if (raw) {
+      try {
+        user = sanitizeAppearance(JSON.parse(raw), branding.appearance)
+      } catch {
+        user = null
+      }
+    }
+    return { branding, user, publicUrl: UMAMI_PUBLIC_URL }
+  }
 )
 
 /** Admins only (checked against Umami, not trusted from the client). */

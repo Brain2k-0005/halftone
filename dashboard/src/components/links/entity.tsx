@@ -29,7 +29,7 @@ import {
 } from "@/components/app/ui-kit"
 import { apiGet, useApi, useApiMutation, type Paged } from "@/lib/api-client"
 import { formatNumber } from "@/lib/format"
-import { resolveWebsiteQuery } from "@/lib/website-query"
+import { browserTimezone } from "@/lib/website-query"
 import { randomSlug, scopedPath, useHosts, useTeamId } from "./shared"
 
 /*
@@ -269,15 +269,10 @@ export function EntityListPage({ kind }: { kind: EntityKind }) {
     () => (data?.data ?? []).map((r) => r.id).join(","),
     [data]
   )
-  const { dates } = useMemo(() => resolveWebsiteQuery({ range: "7d" }), [])
+  // No startAt/endAt: the server then uses its default 7 days, aligned to the 12-hour buckets of the sparkline.
   const { data: charts } = useApi<ChartsResponse>(
     ids ? `${config.base}/charts` : null,
-    {
-      ids,
-      startAt: dates.startAt,
-      endAt: dates.endAt,
-      timezone: dates.timezone,
-    }
+    { ids, timezone: browserTimezone() }
   )
 
   const columns: Column<SlugEntity>[] = [

@@ -27,7 +27,7 @@ import { useApi, useApiMutation, type Paged } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/admin/users/$userId")({
   staticData: { crumb: { label: "User", icon: "overview" } },
-  head: () => ({ meta: [{ title: "User · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "User · Administration · Halftone" }] }),
   component: AdminUserPage,
 })
 
@@ -84,6 +84,22 @@ function AdminUserPage() {
   ])
 
   const u = user.data
+
+  if (user.isSuccess && !u) {
+    return (
+      <SectionCard>
+        <EmptyState
+          title="User not found"
+          description="It may have been deleted."
+          action={
+            <Link to="/admin/users" className={BACK}>
+              <ArrowLeftIcon className="size-4" /> Back to list
+            </Link>
+          }
+        />
+      </SectionCard>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-5">

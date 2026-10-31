@@ -69,6 +69,16 @@ export function useRefreshTeams() {
   }
 }
 
+/** After leaving/deleting a team its endpoints answer 401/404: drop them from the cache instead of refetching. */
+function useForgetTeam(teamId: string) {
+  const client = useQueryClient()
+  return () =>
+    client.removeQueries({
+      predicate: (q) =>
+        q.queryKey[0] === "api" && typeof q.queryKey[1] === "string" && q.queryKey[1].startsWith(`/teams/${teamId}`),
+    })
+}
+
 export function DetailsTab({
   team,
   user,
@@ -81,6 +91,7 @@ export function DetailsTab({
   isOwner: boolean
 }) {
   const refresh = useRefreshTeams()
+  const forget = useForgetTeam(team.id)
   const navigate = useNavigate()
   const [name, setName] = useState(team.name)
   const [accessCode, setAccessCode] = useState(team.accessCode ?? "")
@@ -197,9 +208,10 @@ export function DetailsTab({
         onConfirm={async () => {
           await apiDelete(`/teams/${team.id}`)
           leaveWorkspace()
+          await navigate({ to: "/settings/teams" })
+          forget()
           await refresh()
           toast.success("Team deleted")
-          await navigate({ to: "/settings/teams" })
         }}
       />
       <ConfirmDialog
@@ -215,9 +227,10 @@ export function DetailsTab({
         onConfirm={async () => {
           await apiDelete(`/teams/${team.id}/users/${user.id}`)
           leaveWorkspace()
+          await navigate({ to: "/settings/teams" })
+          forget()
           await refresh()
           toast.success("You left the team")
-          await navigate({ to: "/settings/teams" })
         }}
       />
     </div>

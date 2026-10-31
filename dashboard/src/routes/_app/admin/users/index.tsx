@@ -23,7 +23,7 @@ import { useApiMutation } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/admin/users/")({
   staticData: { crumb: { label: "Users", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Users · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Users · Administration · Halftone" }] }),
   component: AdminUsersPage,
 })
 
@@ -119,7 +119,7 @@ function AdminUsersPage() {
         open={creating}
         onOpenChange={setCreating}
         title="New user"
-        description="Create an account that can sign in to this Umami instance."
+        description="Create an account that can sign in to this instance."
         submitLabel="Create user"
         onSubmit={async (form) => {
           await create.mutateAsync({

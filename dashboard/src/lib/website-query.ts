@@ -1,11 +1,7 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useMemo } from "react"
-import {
-  DEFAULT_RANGE,
-  isRange,
-  resolveRange,
-  type RangeKey,
-} from "@/lib/range"
+import { defaultRange } from "@/lib/default-range"
+import { isRange, resolveRange, type RangeKey } from "@/lib/range"
 
 /*
  * Shared date range + filter state for every website page. It lives in the URL search params
@@ -98,7 +94,7 @@ export function resolveWebsiteQuery(
   search: Record<string, unknown>,
   timezone = browserTimezone()
 ) {
-  const range = isRange(search.range) ? search.range : DEFAULT_RANGE
+  const range = isRange(search.range) ? search.range : defaultRange()
   const custom =
     typeof search.startAt === "number" && typeof search.endAt === "number"
   const { startAt, endAt, unit } = custom

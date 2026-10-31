@@ -11,7 +11,7 @@ import { useApi } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/settings/security")({
   staticData: { crumb: { label: "Security", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Security · Umami" }] }),
+  head: () => ({ meta: [{ title: "Security · Halftone" }] }),
   component: SecurityPage,
 })
 

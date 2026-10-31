@@ -335,14 +335,14 @@ export function ClickHeatmap({
                 <div
                   key={`${p.pageX}-${p.pageY}-${i}`}
                   title={`${p.count} click${p.count === 1 ? "" : "s"}`}
-                  className="absolute rounded-full mix-blend-multiply"
+                  className="absolute rounded-full"
                   style={{
                     left: Math.max(0, Math.min(width, p.pageX)),
                     top: Math.max(0, p.pageY),
                     width: size,
                     height: size,
                     transform: "translate(-50%, -50%)",
-                    opacity: 0.25 + intensity * 0.55,
+                    opacity: 0.4 + intensity * 0.55,
                     background:
                       "radial-gradient(circle, var(--destructive) 0%, color-mix(in oklab, var(--warning) 70%, transparent) 45%, transparent 80%)",
                   }}

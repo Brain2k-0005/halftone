@@ -8,7 +8,7 @@ import { apiPost } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/settings/profile")({
   staticData: { crumb: { label: "Profile", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Profile · Umami" }] }),
+  head: () => ({ meta: [{ title: "Profile · Halftone" }] }),
   component: ProfilePage,
 })
 

@@ -1,3 +1,4 @@
+import { UMAMI_PUBLIC_URL } from "@/server/umami"
 import { createServerFn } from "@tanstack/react-start"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -30,8 +31,7 @@ export function scopedPath(teamId: string | null | undefined, base: string) {
 }
 
 const hostsFn = createServerFn({ method: "GET" }).handler(() => {
-  const api = new URL(process.env.UMAMI_API_URL ?? "http://localhost:3000/api")
-  const origin = api.origin
+  const origin = UMAMI_PUBLIC_URL
   return {
     linksUrl: (process.env.UMAMI_LINKS_URL ?? `${origin}/q`).replace(/\/$/, ""),
     pixelsUrl: (process.env.UMAMI_PIXELS_URL ?? `${origin}/p`).replace(

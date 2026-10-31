@@ -77,12 +77,12 @@ async function call<T>(
 
 export const shareFn = createServerFn({ method: "GET" })
   .validator((d: { slug: string; range: RangeKey }) => {
-    if (!/^[A-Za-z0-9_-]{1,100}$/.test(d.slug))
-      throw new Error("Invalid share link")
     if (!isRange(d.range)) throw new Error("Invalid range")
     return d
   })
   .handler(async ({ data }) => {
+    if (!/^[A-Za-z0-9_-]{1,100}$/.test(data.slug))
+      return { status: "missing" as const }
     try {
       const share = await call<ShareInfo>(`/share/${data.slug}`)
       if (share.shareType !== ENTITY_WEBSITE || !share.websiteId)

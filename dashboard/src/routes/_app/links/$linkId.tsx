@@ -6,7 +6,7 @@ export const Route = createFileRoute("/_app/links/$linkId")({
   validateSearch: validateWebsiteSearch,
   loader: ({ params }) => loadEntity("link", params.linkId),
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.entity.name ?? "Link"} · Umami` }],
+    meta: [{ title: `${loaderData?.entity.name ?? "Link"} · Halftone` }],
   }),
   component: LinkPage,
 })

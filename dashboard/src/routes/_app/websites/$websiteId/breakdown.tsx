@@ -42,8 +42,7 @@ function BreakdownPage() {
 
   const { data, isLoading, error } = useApi<Row[]>(
     selected.length ? `/websites/${websiteId}/breakdown` : null,
-    { ...query, fields: JSON.stringify(selected) },
-    { placeholderData: (prev) => prev }
+    { ...query, fields: JSON.stringify(selected) }
   )
 
   const toggle = (key: string) =>

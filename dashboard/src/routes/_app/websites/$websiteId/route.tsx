@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_app/websites/$websiteId")({
     }
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.website.name ?? "Website"} · Umami` }],
+    meta: [{ title: `${loaderData?.website.name ?? "Website"} · Halftone` }],
   }),
   component: Outlet,
 })

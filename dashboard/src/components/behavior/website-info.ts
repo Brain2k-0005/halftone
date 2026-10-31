@@ -25,8 +25,3 @@ export interface WebsiteInfo {
 export function useWebsiteInfo(websiteId: string) {
   return useApi<WebsiteInfo>(`/websites/${websiteId}`)
 }
-
-/** Base URL of the Umami server that serves script.js / recorder.js. */
-export const UMAMI_URL = (
-  import.meta.env.VITE_UMAMI_URL ?? "http://localhost:3000"
-).replace(/\/$/, "")

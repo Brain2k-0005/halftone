@@ -24,7 +24,7 @@ import { useApi, useApiMutation, type Paged } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/admin/teams/$teamId")({
   staticData: { crumb: { label: "Team", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Team · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Team · Administration · Halftone" }] }),
   component: AdminTeamPage,
 })
 
@@ -75,6 +75,22 @@ function AdminTeamPage() {
   ])
 
   const t = team.data
+
+  if (team.isSuccess && !t) {
+    return (
+      <SectionCard>
+        <EmptyState
+          title="Team not found"
+          description="It may have been deleted."
+          action={
+            <Link to="/admin/teams" className={BACK}>
+              <ArrowLeftIcon className="size-4" /> Back to list
+            </Link>
+          }
+        />
+      </SectionCard>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-5">

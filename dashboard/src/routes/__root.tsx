@@ -1,10 +1,16 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
-import { appearanceScript, useBranding } from "@/components/app/brand"
+import {
+  HeadContent,
+  ScriptOnce,
+  Scripts,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router"
+import { useAppearance, useBranding } from "@/components/app/brand"
 import { themeScript } from "@/components/app/theme"
 import { htmlAppearance } from "@/lib/branding"
 import { getBrandingFn } from "@/lib/branding-fns"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
@@ -17,11 +23,11 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "robots", content: "noindex,nofollow" },
-      { title: loaderData?.name ?? "Umami" },
+      { title: loaderData?.branding.name ?? "Halftone" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: loaderData?.logo || "/favicon.ico" },
+      { rel: "icon", href: loaderData?.branding.logo || "/favicon.svg" },
     ],
   }),
   notFoundComponent: () => (
@@ -48,15 +54,24 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+/** Page titles end in "· Halftone"; swap in the instance name when an admin renamed it. */
+function useBrandedTitle() {
+  const { name } = useBranding()
+  const href = useRouterState({ select: (s) => s.location.href })
+  useEffect(() => {
+    if (name !== "Halftone" && document.title.endsWith("· Halftone"))
+      document.title = document.title.replace(/· Halftone$/, `· ${name}`)
+  }, [name, href])
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const branding = useBranding()
-  const { style, dither } = htmlAppearance(branding.appearance)
+  useBrandedTitle()
+  const { appearance } = useAppearance()
+  const { style, dither } = htmlAppearance(appearance)
   return (
     <html lang="en" suppressHydrationWarning style={style} data-dither={dither}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{ __html: `${themeScript};${appearanceScript}` }}
-        />
+        <ScriptOnce>{themeScript}</ScriptOnce>
         <HeadContent />
       </head>
       <body>

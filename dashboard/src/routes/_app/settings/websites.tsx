@@ -14,7 +14,7 @@ import type { Website } from "@/lib/api"
 
 export const Route = createFileRoute("/_app/settings/websites")({
   staticData: { crumb: { label: "Websites", icon: "websites" } },
-  head: () => ({ meta: [{ title: "Websites · Umami" }] }),
+  head: () => ({ meta: [{ title: "Websites · Halftone" }] }),
   component: WebsitesSettingsPage,
 })
 

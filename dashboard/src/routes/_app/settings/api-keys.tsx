@@ -25,7 +25,7 @@ import { useQueryClient } from "@tanstack/react-query"
 
 export const Route = createFileRoute("/_app/settings/api-keys")({
   staticData: { crumb: { label: "API keys", icon: "overview" } },
-  head: () => ({ meta: [{ title: "API keys · Umami" }] }),
+  head: () => ({ meta: [{ title: "API keys · Halftone" }] }),
   component: ApiKeysPage,
 })
 

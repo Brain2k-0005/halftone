@@ -21,7 +21,7 @@ import { apiPost, useApi, type Paged } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/settings/teams/")({
   staticData: { crumb: { label: "Teams", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Teams · Umami" }] }),
+  head: () => ({ meta: [{ title: "Teams · Halftone" }] }),
   component: TeamsPage,
 })
 

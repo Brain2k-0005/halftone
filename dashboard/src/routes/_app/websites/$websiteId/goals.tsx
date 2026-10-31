@@ -59,7 +59,7 @@ function GoalDialog({
       onSubmit={async (f) => {
         await save.mutateAsync({
           name: String(f.get("name")).trim(),
-          description: String(f.get("description") ?? "").trim() || undefined,
+          description: String(f.get("description") ?? "").trim(),
           parameters: {
             type: String(f.get("type")),
             value: String(f.get("value")).trim(),

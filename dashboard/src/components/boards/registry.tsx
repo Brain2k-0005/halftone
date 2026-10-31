@@ -106,14 +106,14 @@ const SHARED_METRIC_TYPES = METRIC_TYPES.filter((m) =>
 const LIMITS = ["5", "10", "20"].map((v) => ({ label: v, value: v }))
 
 const UTM_PARAMS = [
-  { label: "Source", value: "utmSource" },
-  { label: "Medium", value: "utmMedium" },
-  { label: "Campaign", value: "utmCampaign" },
-  { label: "Content", value: "utmContent" },
-  { label: "Term", value: "utmTerm" },
+  { label: "Source", value: "utm_source" },
+  { label: "Medium", value: "utm_medium" },
+  { label: "Campaign", value: "utm_campaign" },
+  { label: "Content", value: "utm_content" },
+  { label: "Term", value: "utm_term" },
 ]
 
-/** Legacy boards stored UTM params as `utm_source`. */
+/** Boards store UTM params as `utm_source` (original format); the metrics API wants `utmSource`. */
 const utmType = (param: unknown) =>
   String(param ?? "utmSource").replace(/_(\w)/g, (_, c: string) =>
     c.toUpperCase()
@@ -189,14 +189,14 @@ const WIDGETS: WidgetDefinition[] = [
     category: "tables",
     icon: ChartPieIcon,
     supports: ["website"],
-    defaultProps: { param: "utmSource", limit: "10" },
+    defaultProps: { param: "utm_source", limit: "10" },
     fields: [
       {
         name: "param",
         label: "UTM param",
         type: "select",
         options: UTM_PARAMS,
-        defaultValue: "utmSource",
+        defaultValue: "utm_source",
       },
       {
         name: "limit",

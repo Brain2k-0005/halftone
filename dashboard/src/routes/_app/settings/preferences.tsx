@@ -12,11 +12,12 @@ import {
   TIMEZONE_KEY,
   usePref,
 } from "@/components/settings/prefs"
-import { DEFAULT_RANGE, RANGES, type RangeKey } from "@/lib/range"
+import { saveDefaultRange } from "@/lib/default-range"
+import { DEFAULT_RANGE, isRange, RANGES, type RangeKey } from "@/lib/range"
 
 export const Route = createFileRoute("/_app/settings/preferences")({
   staticData: { crumb: { label: "Preferences", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Preferences · Umami" }] }),
+  head: () => ({ meta: [{ title: "Preferences · Halftone" }] }),
   component: PreferencesPage,
 })
 
@@ -88,7 +89,7 @@ function PreferencesPage() {
 
       <SectionCard
         title="Defaults"
-        description="Stored in this browser, like in the original Umami."
+        description="Stored in this browser, in this browser."
       >
         <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
           <PreferenceRow
@@ -96,7 +97,10 @@ function PreferencesPage() {
             value={range}
             options={RANGE_OPTIONS}
             fallback={DEFAULT_RANGE}
-            onSave={setRange}
+            onSave={(v) => {
+              setRange(v)
+              saveDefaultRange(isRange(v) ? v : null)
+            }}
           />
           <PreferenceRow
             label="Timezone"

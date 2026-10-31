@@ -19,7 +19,7 @@ import { useApi } from "@/lib/api-client"
 
 export const Route = createFileRoute("/_app/settings/teams/$teamId")({
   staticData: { crumb: { label: "Team", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Team · Umami" }] }),
+  head: () => ({ meta: [{ title: "Team · Halftone" }] }),
   component: TeamPage,
 })
 

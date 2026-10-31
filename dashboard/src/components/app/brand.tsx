@@ -1,33 +1,60 @@
-import { useRouterState } from "@tanstack/react-router"
+import { useRouter, useRouterState } from "@tanstack/react-router"
 import { useCallback, useSyncExternalStore } from "react"
 import { Logo } from "@/components/app/logo"
 import {
   APPEARANCE_KEY,
   DEFAULT_BRANDING,
-  PRESETS,
-  RADII,
   htmlAppearance,
-  sanitizeAppearance,
   type Appearance,
   type Branding,
 } from "@/lib/branding"
 import { cn } from "@/lib/utils"
 
-/** Instance branding from the root loader (falls back to defaults while an error page renders). */
-export function useBranding(): Branding {
+interface RootData {
+  branding: Branding
+  user: Appearance | null
+  /** Public origin of the Umami server (tracker script, short links, pixels). */
+  publicUrl: string
+}
+
+function useRootData(): RootData {
   return useRouterState({
     select: (s) =>
-      (s.matches[0]?.loaderData as Branding | undefined) ?? DEFAULT_BRANDING,
+      (s.matches[0]?.loaderData as RootData | undefined) ?? {
+        branding: DEFAULT_BRANDING,
+        user: null,
+        publicUrl: "",
+      },
   })
 }
 
+/** Public origin of the Umami server, e.g. for the tracking snippet. */
+export function useUmamiPublicUrl(): string {
+  return useRootData().publicUrl
+}
+
+/** Instance branding from the root loader (falls back to defaults while an error page renders). */
+export function useBranding(): Branding {
+  return useRootData().branding
+}
+
 /*
- * Runs before paint (inlined in <head>): applies the user's saved appearance so there is no flash of the
- * instance default. Mirrors applyAppearance() below.
+ * The user's own appearance lives in a cookie (read by the root loader on the server, so the first paint
+ * already has the right colours and shell). While a change is on its way we keep it optimistically here.
  */
-export const appearanceScript = `(function(){try{var a=JSON.parse(localStorage.getItem('${APPEARANCE_KEY}')||'null');if(!a)return;var p=${JSON.stringify(
-  Object.fromEntries(PRESETS.map((p) => [p.id, p.accent]))
-)};var r=${JSON.stringify(Object.fromEntries(RADII.map((r) => [r.id, r.value])))};var h=document.documentElement;var c=a.preset==='custom'?a.accent:p[a.preset];if(/^#[0-9a-f]{6}$/i.test(c))h.style.setProperty('--brand',c);if(r[a.radius])h.style.setProperty('--radius',r[a.radius]);if(typeof a.dither==='boolean')h.setAttribute('data-dither',a.dither?'on':'off')}catch(e){}})()`
+let optimistic: Appearance | null | undefined
+const listeners = new Set<() => void>()
+const subscribe = (fn: () => void) => {
+  listeners.add(fn)
+  return () => listeners.delete(fn)
+}
+const getOptimistic = () => optimistic
+
+function writeCookie(value: Appearance | null) {
+  document.cookie = value
+    ? `${APPEARANCE_KEY}=${encodeURIComponent(JSON.stringify(value))}; path=/; max-age=31536000; samesite=lax`
+    : `${APPEARANCE_KEY}=; path=/; max-age=0; samesite=lax`
+}
 
 function applyAppearance(a: Appearance) {
   const h = document.documentElement
@@ -36,50 +63,35 @@ function applyAppearance(a: Appearance) {
   h.setAttribute("data-dither", dither)
 }
 
-const listeners = new Set<() => void>()
-const subscribe = (fn: () => void) => {
-  listeners.add(fn)
-  return () => listeners.delete(fn)
-}
-const readStored = () =>
-  typeof window === "undefined" ? null : localStorage.getItem(APPEARANCE_KEY)
-
 /** The effective appearance for this browser: the user's override, else the instance default. */
 export function useAppearance() {
-  const branding = useBranding()
-  const raw = useSyncExternalStore(subscribe, readStored, () => null)
-  const custom = raw !== null
-  const appearance = custom
-    ? sanitizeAppearance(safeParse(raw), branding.appearance)
-    : branding.appearance
+  const { branding, user } = useRootData()
+  const router = useRouter()
+  const pending = useSyncExternalStore(
+    subscribe,
+    getOptimistic,
+    () => undefined
+  )
+  const own = pending === undefined ? user : pending
+  const appearance = own ?? branding.appearance
 
-  const setAppearance = useCallback((next: Appearance) => {
-    localStorage.setItem(APPEARANCE_KEY, JSON.stringify(next))
-    applyAppearance(next)
-    listeners.forEach((l) => l())
-  }, [])
-
-  /** Back to the instance default. */
-  const reset = useCallback(() => {
-    localStorage.removeItem(APPEARANCE_KEY)
-    applyAppearance(branding.appearance)
-    listeners.forEach((l) => l())
-  }, [branding.appearance])
+  const commit = useCallback(
+    (next: Appearance | null) => {
+      optimistic = next
+      writeCookie(next)
+      applyAppearance(next ?? branding.appearance)
+      listeners.forEach((l) => l())
+      void router.invalidate()
+    },
+    [branding.appearance, router]
+  )
 
   return {
     appearance,
-    custom,
-    setAppearance,
-    reset,
-    previewInstance: applyAppearance,
-  }
-}
-
-function safeParse(value: string) {
-  try {
-    return JSON.parse(value)
-  } catch {
-    return null
+    custom: own !== null,
+    setAppearance: (next: Appearance) => commit(next),
+    /** Back to the instance default. */
+    reset: () => commit(null),
   }
 }
 

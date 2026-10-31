@@ -9,7 +9,7 @@ import { DataTable, EmptyState, Pagination } from "@/components/app/ui-kit"
 
 export const Route = createFileRoute("/_app/admin/teams/")({
   staticData: { crumb: { label: "Teams", icon: "overview" } },
-  head: () => ({ meta: [{ title: "Teams · Administration · Umami" }] }),
+  head: () => ({ meta: [{ title: "Teams · Administration · Halftone" }] }),
   component: AdminTeamsPage,
 })
 

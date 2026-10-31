@@ -13,6 +13,8 @@ import {
   PRESETS,
   RADII,
   radiusOf,
+  SHELLS,
+  type ShellId,
   type Appearance,
   type RadiusId,
 } from "@/lib/branding"
@@ -87,6 +89,37 @@ export function AppearanceEditor({
         </div>
       </div>
 
+      <div className="grid gap-2">
+        <p className="text-[13px] font-medium">Layout</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {SHELLS.map((sh) => {
+            const active = value.shell === sh.id
+            return (
+              <button
+                key={sh.id}
+                type="button"
+                onClick={() => set({ shell: sh.id })}
+                aria-pressed={active}
+                className={cn(
+                  "grid gap-2.5 rounded-xl border bg-card p-2.5 text-left shadow-xs transition-colors hover:bg-accent",
+                  active && "ring-2 ring-ring"
+                )}
+              >
+                <ShellThumb shell={sh.id} />
+                <span>
+                  <span className="block text-[13px] font-medium">
+                    {sh.label}
+                  </span>
+                  <span className="block text-xs text-muted-foreground">
+                    {sh.description}
+                  </span>
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center gap-x-10 gap-y-4">
         <div className="grid gap-2">
           <p className="text-[13px] font-medium">Corners</p>
@@ -108,6 +141,72 @@ export function AppearanceEditor({
           />
         </div>
       </div>
+    </div>
+  )
+}
+
+/** Schematic of a shell: nav chrome in the sidebar tone, content in the page tone. */
+function ShellThumb({ shell }: { shell: ShellId }) {
+  const nav = "bg-[var(--sidebar-bg)]"
+  const lines = (
+    <div className="grid gap-1 p-1.5">
+      <div className="h-1 w-3/5 rounded-full bg-muted-foreground/40" />
+      <div className="h-1 w-4/5 rounded-full bg-muted-foreground/25" />
+      <div className="h-1 w-2/5 rounded-full bg-muted-foreground/25" />
+    </div>
+  )
+  const content = (cls: string) => (
+    <div className={cn("flex-1 border bg-background", cls)}>
+      <div className="h-2.5 border-b" />
+      <div className="grid grid-cols-2 gap-1 p-1.5">
+        <div className="h-4 rounded-sm bg-muted" />
+        <div className="h-4 rounded-sm bg-muted" />
+      </div>
+    </div>
+  )
+  const frame = "flex h-[76px] overflow-hidden rounded-lg border"
+  if (shell === "sidebar")
+    return (
+      <div className={cn(frame, "bg-background")}>
+        <div className={cn("w-1/4 border-r", nav)}>{lines}</div>
+        {content("rounded-none border-0")}
+      </div>
+    )
+  if (shell === "inset")
+    return (
+      <div className={cn(frame, nav)}>
+        <div className="w-1/4">{lines}</div>
+        {content("m-1 ml-0 rounded-md shadow-xs")}
+      </div>
+    )
+  if (shell === "floating")
+    return (
+      <div
+        className={cn(
+          frame,
+          "gap-1 bg-[color-mix(in_oklab,var(--background)_92%,var(--foreground))] p-1"
+        )}
+      >
+        <div className={cn("w-1/4 rounded-md border shadow-xs", nav)}>
+          {lines}
+        </div>
+        {content("rounded-md shadow-xs")}
+      </div>
+    )
+  return (
+    <div className={cn(frame, "bg-background")}>
+      <div
+        className={cn(
+          "flex w-[10%] flex-col items-center gap-1 border-r py-1.5",
+          nav
+        )}
+      >
+        <div className="size-1.5 rounded-sm bg-brand" />
+        <div className="size-1.5 rounded-sm bg-muted-foreground/40" />
+        <div className="size-1.5 rounded-sm bg-muted-foreground/40" />
+      </div>
+      <div className={cn("w-1/5 border-r", nav)}>{lines}</div>
+      {content("rounded-none border-0")}
     </div>
   )
 }

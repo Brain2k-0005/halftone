@@ -7,23 +7,24 @@ import {
   SectionCard,
   Sparkline,
 } from "@/components/app/section-card"
+import { defaultRange } from "@/lib/default-range"
 import { websitesSummaryFn } from "@/lib/api"
 import { formatNumber, percentChange } from "@/lib/format"
-import { DEFAULT_RANGE, isRange, RANGES, type RangeKey } from "@/lib/range"
+import { isRange, RANGES, type RangeKey } from "@/lib/range"
 
 export const Route = createFileRoute("/_app/websites/")({
   validateSearch: (s: Record<string, unknown>): { range?: RangeKey } =>
     isRange(s.range) ? { range: s.range } : {},
-  loaderDeps: ({ search }) => ({ range: search.range ?? DEFAULT_RANGE }),
+  loaderDeps: ({ search }) => ({ range: search.range ?? defaultRange() }),
   loader: ({ deps }) => websitesSummaryFn({ data: { range: deps.range } }),
   staticData: { crumb: { label: "Websites", icon: "websites" } },
-  head: () => ({ meta: [{ title: "Websites · Umami" }] }),
+  head: () => ({ meta: [{ title: "Websites · Halftone" }] }),
   component: WebsitesPage,
 })
 
 function WebsitesPage() {
   const sites = Route.useLoaderData()
-  const { range = DEFAULT_RANGE } = Route.useSearch()
+  const range = Route.useSearch().range ?? defaultRange()
   const navigate = useNavigate({ from: Route.fullPath })
 
   return (

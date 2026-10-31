@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_app/boards/$boardId")({
   }),
   loader: ({ params }) => loadBoard(params.boardId),
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.board.name ?? "Board"} · Umami` }],
+    meta: [{ title: `${loaderData?.board.name ?? "Board"} · Halftone` }],
   }),
   component: BoardRoute,
 })
