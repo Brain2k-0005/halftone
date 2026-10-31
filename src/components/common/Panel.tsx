@@ -48,22 +48,38 @@ export function Panel({
     setIsFullscreen(!isFullscreen);
   };
 
+  const hasHeader = title || description;
+
   return (
     <Column
-      paddingY="6"
-      paddingX={{ base: '3', md: '6' }}
+      paddingY="5"
+      paddingX={{ base: '3', md: '5' }}
       border
       borderRadius
       backgroundColor="surface"
       position="relative"
       gap
       {...props}
+      className={['reui-card reui-dither', props.className].filter(Boolean).join(' ')}
       style={{ ...style, ...(isFullscreen ? fullscreenStyles : { height, width }) }}
     >
-      {title && <Heading>{title}</Heading>}
-      {description && <Text color="muted">{description}</Text>}
+      {hasHeader && (
+        <Column gap="1">
+          {title && (
+            <Heading size="sm" className="reui-card-title">
+              {title}
+            </Heading>
+          )}
+          {description && <Text className="reui-card-description">{description}</Text>}
+        </Column>
+      )}
       {(allowFullscreen || toolbar) && (
-        <Row justifyContent="flex-end" alignItems="center" gap>
+        <Row
+          justifyContent="flex-end"
+          alignItems="center"
+          gap
+          style={hasHeader ? { position: 'absolute', top: 16, right: 16 } : undefined}
+        >
           {toolbar}
           {allowFullscreen &&
             (isFullscreen ? (

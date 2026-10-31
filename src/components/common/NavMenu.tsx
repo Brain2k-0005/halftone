@@ -39,11 +39,12 @@ export function NavMenu({
           <Row
             padding
             borderRadius
-            hover={{ backgroundColor: 'surface-sunken' }}
-            backgroundColor={isSelected ? 'surface-sunken' : undefined}
+            alignItems="center"
+            className="reui-nav-item"
+            data-selected={isSelected}
           >
             <IconLabel icon={icon}>
-              <Text weight={isSelected ? 'bold' : 'normal'}>{label}</Text>
+              <Text>{label}</Text>
             </IconLabel>
           </Row>
         </Link>
@@ -63,8 +64,8 @@ export function NavMenu({
           if (label) {
             return (
               <Column key={`${label}${index}`} gap="1" minHeight="40px">
-                <Row paddingX="3" marginTop="2">
-                  <Text weight="bold">{label}</Text>
+                <Row className="reui-nav-section">
+                  <Text size="xs">{label}</Text>
                 </Row>
                 {renderItems(items)}
               </Column>

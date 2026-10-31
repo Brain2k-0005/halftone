@@ -24,8 +24,8 @@ export function PageHeader({
   return (
     <Grid
       columns={{ base: '1fr', md: '1fr 1fr' }}
-      paddingY="6"
-      marginBottom="6"
+      paddingY="5"
+      marginBottom="5"
       border={showBorder ? 'bottom' : undefined}
     >
       <Column gap="2">
@@ -38,10 +38,10 @@ export function PageHeader({
           )}
           {title && titleHref ? (
             <LinkButton href={titleHref} variant="quiet">
-              <Heading size={{ base: 'lg', md: '2xl', lg: '3xl' }}>{title}</Heading>
+              <Heading size={{ base: 'lg', md: 'xl', lg: '2xl' }}>{title}</Heading>
             </LinkButton>
           ) : (
-            title && <Heading size={{ base: 'lg', md: '2xl', lg: '3xl' }}>{title}</Heading>
+            title && <Heading size={{ base: 'lg', md: 'xl', lg: '2xl' }}>{title}</Heading>
           )}
         </Row>
         {description && (

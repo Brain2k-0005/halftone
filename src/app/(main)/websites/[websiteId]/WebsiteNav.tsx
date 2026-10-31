@@ -18,7 +18,7 @@ export function WebsiteNav({
   const { items, selectedKey } = useWebsiteNavItems(websiteId);
 
   return (
-    <Column gap="2" marginTop={isCollapsed ? '2' : undefined}>
+    <Column gap="1" marginTop={isCollapsed ? '2' : undefined}>
       <Link href={renderUrl('/websites', false)} role="button" onClick={onItemClick}>
         {isCollapsed ? (
           <TooltipTrigger delay={0}>
@@ -26,7 +26,7 @@ export function WebsiteNav({
               tabIndex={0}
               alignItems="center"
               justifyContent="center"
-              hover={{ backgroundColor: 'surface-sunken' }}
+              className="reui-nav-item"
               borderRadius
               minHeight="9"
             >
@@ -35,12 +35,7 @@ export function WebsiteNav({
             <Tooltip placement="right">{t(labels.back)}</Tooltip>
           </TooltipTrigger>
         ) : (
-          <Row
-            alignItems="center"
-            hover={{ backgroundColor: 'surface-sunken' }}
-            borderRadius
-            minHeight="9"
-          >
+          <Row alignItems="center" className="reui-nav-item" borderRadius minHeight="9">
             <IconLabel icon={<ArrowLeft />} label={t(labels.back)} padding />
           </Row>
         )}
@@ -48,8 +43,8 @@ export function WebsiteNav({
       {items.map(({ label: sectionLabel, items: sectionItems }, index) => (
         <Column key={`${sectionLabel}${index}`} gap="1" marginBottom="1">
           {!isCollapsed && (
-            <Row paddingX="3" marginTop="2">
-              <Text weight="bold">{sectionLabel}</Text>
+            <Row className="reui-nav-section">
+              <Text size="xs">{sectionLabel}</Text>
             </Row>
           )}
           {sectionItems.map(({ id, path, label, icon }) => {
@@ -62,34 +57,24 @@ export function WebsiteNav({
                       tabIndex={0}
                       alignItems="center"
                       justifyContent="center"
-                      hover={{ backgroundColor: 'surface-sunken' }}
-                      backgroundColor={isSelected ? 'surface-sunken' : undefined}
+                      className="reui-nav-item"
+                      data-selected={isSelected}
                       borderRadius
                       minHeight="9"
                     >
-                      <IconLabel
-                        icon={icon}
-                        label=""
-                        weight={isSelected ? 'bold' : undefined}
-                        padding
-                      />
+                      <IconLabel icon={icon} label="" padding />
                     </Row>
                     <Tooltip placement="right">{label}</Tooltip>
                   </TooltipTrigger>
                 ) : (
                   <Row
                     alignItems="center"
-                    hover={{ backgroundColor: 'surface-sunken' }}
-                    backgroundColor={isSelected ? 'surface-sunken' : undefined}
+                    className="reui-nav-item"
+                    data-selected={isSelected}
                     borderRadius
                     minHeight="9"
                   >
-                    <IconLabel
-                      icon={icon}
-                      label={label}
-                      weight={isSelected ? 'bold' : undefined}
-                      padding
-                    />
+                    <IconLabel icon={icon} label={label} padding />
                   </Row>
                 )}
               </Link>

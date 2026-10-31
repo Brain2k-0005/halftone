@@ -72,13 +72,10 @@ export function SideNav(props: any) {
   return (
     <Column
       {...props}
-      backgroundColor="surface"
-      border
-      borderRadius
+      className="reui-sidebar"
       padding="2"
       flexGrow="1"
       minHeight="0"
-      margin="2"
       style={{
         width: isCollapsed ? '60px' : '240px',
         transition: 'width 0.2s ease-in-out',
@@ -99,7 +96,9 @@ export function SideNav(props: any) {
         >
           {!isCollapsed && (
             <IconLabel icon={<Logo />}>
-              <Text weight="bold">umami</Text>
+              <Text weight="semibold" style={{ letterSpacing: '-0.02em' }}>
+                umami
+              </Text>
             </IconLabel>
           )}
           <PanelButton />
@@ -116,7 +115,7 @@ export function SideNav(props: any) {
         ) : pathname.includes('/admin') ? (
           <AdminNav />
         ) : (
-          <Column gap="2">
+          <Column gap="1">
             {links.map(({ id, path, label, icon }) => {
               const isSelected = pathname.startsWith(renderUrl(path, false));
               const content = (
@@ -124,17 +123,12 @@ export function SideNav(props: any) {
                   tabIndex={0}
                   alignItems="center"
                   justifyContent={isCollapsed ? 'center' : undefined}
-                  hover={{ backgroundColor: 'surface-sunken' }}
-                  backgroundColor={isSelected ? 'surface-sunken' : undefined}
+                  className="reui-nav-item"
+                  data-selected={isSelected}
                   borderRadius
                   minHeight="9"
                 >
-                  <IconLabel
-                    icon={icon}
-                    label={isCollapsed ? '' : label}
-                    weight={isSelected ? 'bold' : undefined}
-                    padding
-                  />
+                  <IconLabel icon={icon} label={isCollapsed ? '' : label} padding />
                 </Row>
               );
               return (

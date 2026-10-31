@@ -1,0 +1,356 @@
+/*
+ * ReUI theme layer.
+ *
+ * Re-skins Umami's Zen components with a ReUI-style look: near-black zinc surfaces,
+ * hairline borders, a violet accent and dithered card backgrounds. Everything here
+ * works on top of Zen's design tokens and `data-slot` hooks, so upstream components
+ * keep working without being forked.
+ */
+
+:root {
+  --font-geist-fallback: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --zen-font-family: var(--font-geist-fallback);
+  --zen-radius: 0.625rem;
+
+  --reui-accent: oklch(62% 0.21 285);
+  --reui-accent-strong: oklch(70% 0.19 285);
+  --reui-accent-soft: oklch(62% 0.21 285 / 0.14);
+  --reui-card-radius: 0.875rem;
+  --reui-dither-color: oklch(100% 0 0 / 0.1);
+  --reui-glow: oklch(62% 0.21 285 / 0.06);
+  --reui-sidebar: oklch(14.5% 0.002 286);
+  --reui-shadow: 0 1px 0 0 oklch(100% 0 0 / 0.03) inset, 0 1px 2px 0 oklch(0% 0 0 / 0.4);
+
+  /* 1px noise, thresholded into sparse pixels — the "dither" texture. */
+  --reui-dither: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 -5.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Dark is the primary look. */
+:root,
+[data-theme="dark"],
+.dark {
+  --zen-palette-50: oklch(98.5% 0 0);
+  --zen-palette-100: oklch(96.7% 0.001 286);
+  --zen-palette-200: oklch(92% 0.004 286);
+  --zen-palette-300: oklch(87.1% 0.006 286);
+  --zen-palette-400: oklch(70.5% 0.015 286);
+  --zen-palette-500: oklch(55.2% 0.016 286);
+  --zen-palette-600: oklch(44.2% 0.017 286);
+  --zen-palette-700: oklch(37% 0.013 286);
+  --zen-palette-800: oklch(27.4% 0.006 286);
+  --zen-palette-900: oklch(21% 0.006 286);
+  --zen-palette-950: oklch(14.1% 0.005 286);
+
+  --zen-primary: var(--reui-accent);
+  --zen-primary-fg: oklch(98.5% 0 0);
+}
+
+[data-theme="dark"],
+.dark {
+  --zen-surface: oklch(16.5% 0.003 286);
+  --zen-surface-raised: oklch(12.5% 0.002 286);
+  --zen-surface-sunken: oklch(21% 0.004 286);
+  --zen-surface-overlay: oklch(17.5% 0.004 286);
+  --zen-surface-disabled: oklch(19% 0.004 286);
+  --zen-fg: oklch(96% 0.002 286);
+  --zen-fg-muted: oklch(66% 0.012 286);
+  --zen-fg-disabled: oklch(48% 0.012 286);
+  --zen-border: oklch(25% 0.005 286);
+  --zen-border-muted: oklch(21.5% 0.004 286);
+  --zen-border-strong: oklch(33% 0.008 286);
+  --zen-interactive-bg: oklch(20% 0.004 286);
+  --zen-interactive-bg-hover: oklch(24% 0.005 286);
+  --zen-interactive-bg-pressed: oklch(28% 0.006 286);
+  --zen-focus-ring: var(--reui-accent);
+  --zen-focus-offset: oklch(12.5% 0.002 286);
+
+  --zen-status-success: oklch(76% 0.17 155);
+  --zen-status-success-bg: oklch(76% 0.17 155 / 0.12);
+  --zen-status-error: oklch(68% 0.2 22);
+  --zen-status-error-bg: oklch(68% 0.2 22 / 0.12);
+  --zen-status-warning: oklch(82% 0.16 80);
+  --zen-status-warning-bg: oklch(82% 0.16 80 / 0.12);
+}
+
+[data-theme="light"] {
+  --zen-primary: oklch(55% 0.23 285);
+  --zen-surface: #fff;
+  --zen-surface-raised: oklch(98.5% 0.001 286);
+  --zen-surface-sunken: oklch(96.5% 0.002 286);
+  --zen-border: oklch(92% 0.004 286);
+  --zen-border-muted: oklch(94.5% 0.003 286);
+  --zen-focus-ring: oklch(55% 0.23 285);
+
+  --reui-accent: oklch(55% 0.23 285);
+  --reui-accent-strong: oklch(50% 0.24 285);
+  --reui-accent-soft: oklch(55% 0.23 285 / 0.1);
+  --reui-dither-color: oklch(0% 0 0 / 0.05);
+  --reui-glow: oklch(55% 0.23 285 / 0.04);
+  --reui-sidebar: oklch(98.5% 0.001 286);
+  --reui-shadow: 0 1px 2px 0 oklch(0% 0 0 / 0.04);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--reui-accent-soft);
+}
+
+/* ---------------------------------------------------------------- Dither */
+
+.reui-dither {
+  position: relative;
+  isolation: isolate;
+}
+
+.reui-dither::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 0% 0%, var(--reui-glow), transparent 60%),
+    linear-gradient(var(--reui-dither-color), var(--reui-dither-color));
+  -webkit-mask-image:
+    var(--reui-dither), linear-gradient(180deg, #000 0%, #000 35%, transparent 100%);
+  mask-image: var(--reui-dither), linear-gradient(180deg, #000 0%, #000 35%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-size:
+    180px 180px,
+    100% 100%;
+  mask-size:
+    180px 180px,
+    100% 100%;
+  image-rendering: pixelated;
+}
+
+/* ---------------------------------------------------------------- Cards */
+
+.reui-card {
+  border-radius: var(--reui-card-radius) !important;
+  border-color: var(--zen-border) !important;
+  box-shadow: var(--reui-shadow);
+}
+
+.reui-card-header {
+  margin: calc(var(--reui-pad-y, 1.5rem) * -1) calc(var(--reui-pad-x, 1.5rem) * -1) 0;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--zen-border-muted);
+}
+
+.reui-card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--zen-fg);
+}
+
+.reui-card-description {
+  font-size: 0.8125rem;
+  color: var(--zen-fg-muted);
+}
+
+/* Panel headings rendered by pages inside the card body. */
+.reui-card > h2:first-child,
+.reui-card > h3:first-child {
+  font-size: 0.9375rem !important;
+  line-height: 1.4 !important;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------- Metrics */
+
+.reui-metrics {
+  gap: 0 !important;
+  overflow: hidden;
+  border: 1px solid var(--zen-border);
+  border-radius: var(--reui-card-radius);
+  background-color: var(--zen-surface);
+  box-shadow: var(--reui-shadow);
+}
+
+.reui-metrics > * {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow:
+    inset -1px 0 0 var(--zen-border-muted),
+    inset 0 -1px 0 var(--zen-border-muted);
+}
+
+.reui-metric-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--zen-fg-muted);
+}
+
+.reui-metric-value {
+  font-size: 1.75rem !important;
+  line-height: 1.1 !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+
+.reui-change {
+  border-radius: 9999px;
+  padding: 0.0625rem 0.5rem !important;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, currentColor 30%, transparent);
+}
+
+.reui-change svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* ---------------------------------------------------------------- Shell */
+
+.reui-sidebar {
+  background-color: var(--reui-sidebar);
+  border-right: 1px solid var(--zen-border-muted);
+}
+
+.reui-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 3.5rem;
+  border-bottom: 1px solid var(--zen-border-muted);
+  background-color: color-mix(in oklch, var(--zen-surface-raised) 80%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.reui-nav-section {
+  padding: 0.75rem 0.75rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--zen-fg-muted);
+}
+
+.reui-nav-item {
+  position: relative;
+  min-height: 2.125rem !important;
+  border-radius: 0.5rem !important;
+  color: var(--zen-fg-muted);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.reui-nav-item:hover {
+  color: var(--zen-fg);
+  background-color: var(--zen-interactive-bg) !important;
+}
+
+.reui-nav-item[data-selected="true"] {
+  color: var(--zen-fg);
+  background-color: var(--zen-interactive-bg-hover) !important;
+  font-weight: 500;
+}
+
+.reui-nav-item[data-selected="true"] svg {
+  color: var(--reui-accent-strong) !important;
+  stroke: currentColor;
+}
+
+.reui-nav-item svg {
+  opacity: 0.9;
+}
+
+.reui-nav-item span {
+  font-weight: inherit !important;
+}
+
+/* ---------------------------------------------------------------- Zen controls */
+
+/* Tabs become a ReUI segmented control. */
+[data-slot="tabs-list"][data-orientation="horizontal"] {
+  align-self: flex-start;
+  gap: 0.125rem !important;
+  padding: 0.1875rem;
+  border: 1px solid var(--zen-border-muted) !important;
+  border-radius: 0.625rem;
+  background-color: var(--zen-surface-raised);
+}
+
+[data-slot="tabs-list"][data-orientation="horizontal"] [data-slot="tabs-indicator"] {
+  display: none;
+}
+
+[data-slot="tabs-list"][data-orientation="horizontal"] [data-slot="tabs-trigger"] {
+  height: 1.75rem;
+  padding: 0 0.625rem;
+  border-radius: 0.4375rem;
+  font-size: 0.8125rem;
+  color: var(--zen-fg-muted);
+  margin: 0;
+}
+
+[data-slot="tabs-list"][data-orientation="horizontal"] [data-slot="tabs-trigger"]::after {
+  display: none;
+}
+
+[data-slot="tabs-list"][data-orientation="horizontal"]
+  [data-slot="tabs-trigger"][aria-selected="true"] {
+  color: var(--zen-fg);
+  background-color: var(--zen-surface-sunken);
+  box-shadow:
+    0 0 0 1px var(--zen-border),
+    0 1px 2px oklch(0% 0 0 / 0.25);
+}
+
+[data-slot="button"],
+[data-slot="select-trigger"],
+[data-slot="menu-trigger"],
+[data-slot="dialog-trigger"],
+[data-slot="input"],
+[data-slot="search-field"],
+[data-slot="text-field"] input {
+  border-radius: 0.5rem;
+}
+
+[data-slot="button"][data-variant="primary"] {
+  background-color: var(--reui-accent);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.18),
+    0 1px 2px oklch(0% 0 0 / 0.3);
+}
+
+[data-slot="button"][data-variant="primary"]:hover {
+  background-color: var(--reui-accent-strong);
+}
+
+[data-slot="menu-content"],
+[data-slot="select-content"],
+[data-slot="popover"],
+[data-slot="modal"],
+[data-slot="dialog"] {
+  border-radius: 0.75rem;
+  border-color: var(--zen-border) !important;
+  box-shadow: 0 16px 40px -12px oklch(0% 0 0 / 0.6);
+}
+
+[data-slot="tooltip-bubble"] {
+  border-radius: 0.5rem;
+}
+
+[data-slot="meter-track"],
+[data-slot="progress-track"] {
+  border-radius: 9999px;
+}
+
+/* Hairline scrollbars to match the flat chrome. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--zen-border-strong) transparent;
+}

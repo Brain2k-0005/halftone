@@ -48,16 +48,17 @@ export const MetricCard = ({
   return (
     <Column
       justifyContent="center"
-      paddingX="6"
+      paddingX="5"
       paddingY="4"
       borderRadius
       backgroundColor="surface"
       border
-      gap="4"
+      gap="3"
+      className="reui-metric"
     >
       {showLabel && (
         <Row justifyContent="space-between" alignItems="flex-start">
-          <Text weight="bold" wrap="nowrap">
+          <Text wrap="nowrap" className="reui-metric-label">
             {label}
           </Text>
           {tooltip && (
@@ -72,7 +73,7 @@ export const MetricCard = ({
           )}
         </Row>
       )}
-      <Text size="4xl" weight="bold" wrap="nowrap">
+      <Text size="4xl" weight="bold" wrap="nowrap" className="reui-metric-value">
         <AnimatedDiv title={value?.toString()}>{valueText}</AnimatedDiv>
       </Text>
       {showChange && (

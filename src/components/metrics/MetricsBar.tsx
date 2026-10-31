@@ -7,7 +7,12 @@ export interface MetricsBarProps extends GridProps {
 
 export function MetricsBar({ children, ...props }: MetricsBarProps) {
   return (
-    <Grid columns="repeat(auto-fit, minmax(160px, 1fr))" gap {...props}>
+    <Grid
+      columns="repeat(auto-fit, minmax(160px, 1fr))"
+      gap
+      {...props}
+      className={['reui-metrics reui-dither', props.className].filter(Boolean).join(' ')}
+    >
       {children}
     </Grid>
   );

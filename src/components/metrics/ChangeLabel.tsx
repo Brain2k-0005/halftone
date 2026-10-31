@@ -36,18 +36,18 @@ export function ChangeLabel({
   const neutral = value === 0 || Number.isNaN(value);
   const good = reverseColors ? negative : positive;
 
-  const style =
-    STYLES[good && 'positive'] || STYLES[!good && 'negative'] || STYLES[neutral && 'neutral'];
+  const style = neutral ? STYLES.neutral : good ? STYLES.positive : STYLES.negative;
 
   return (
     <Row
       {...props}
+      className={['reui-change', props.className].filter(Boolean).join(' ')}
       style={style}
       alignItems="center"
       alignSelf="flex-start"
       paddingX="2"
       paddingY="1"
-      gap="2"
+      gap="1"
     >
       {!neutral && (
         <Icon rotate={positive ? -90 : 90} size={size}>

@@ -46,7 +46,7 @@ export function TopNav() {
       paddingRight="5"
       width="100%"
       zIndex={100}
-      backgroundColor="surface-raised"
+      className="reui-topbar"
     >
       <Row alignItems="center">
         <TeamsButton />
