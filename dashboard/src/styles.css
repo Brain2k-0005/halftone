@@ -88,11 +88,12 @@
   --destructive-foreground: hsl(0 72% 40%);
   --border: hsl(240 6% 90%);
   --input: hsl(240 6% 90%);
-  --ring: hsl(248 96% 68%);
+  /* One accent drives everything: themes/branding only set --brand (and optionally --radius). */
   --radius: 0.6rem;
-  --brand: hsl(248 96% 68%);
-  --brand-deep: hsl(248 54% 38%);
-  --brand-soft: hsl(248 100% 97%);
+  --brand: #6d5dfc;
+  --ring: var(--brand);
+  --brand-deep: color-mix(in oklab, var(--brand) 62%, black);
+  --brand-soft: color-mix(in oklab, var(--brand) 9%, white);
   --success: hsl(160 84% 30%);
   --success-foreground: hsl(160 84% 24%);
   --warning: hsl(32 95% 44%);
@@ -110,7 +111,7 @@
   --info-soft: hsl(214 100% 97%);
   --info-line: hsl(213 90% 85%);
   --chart-1: var(--brand);
-  --chart-2: hsl(248 60% 82%);
+  --chart-2: color-mix(in oklab, var(--brand) 42%, white);
   --chart-3: var(--success);
   --chart-4: var(--warning);
   --chart-5: var(--info);
@@ -150,10 +151,9 @@
   --destructive-foreground: hsl(0 72% 70%);
   --border: hsl(0 0% 13%);
   --input: hsl(0 0% 15%);
-  --ring: hsl(248 96% 68%);
-  --brand: hsl(248 96% 68%);
-  --brand-deep: hsl(248 90% 76%);
-  --brand-soft: hsl(248 40% 16%);
+  --ring: var(--brand);
+  --brand-deep: color-mix(in oklab, var(--brand) 72%, white);
+  --brand-soft: color-mix(in oklab, var(--brand) 20%, hsl(0 0% 6%));
   --success: hsl(158 64% 52%);
   --success-foreground: hsl(158 64% 62%);
   --warning: hsl(38 92% 60%);
@@ -171,7 +171,7 @@
   --info-soft: hsl(214 50% 13%);
   --info-line: hsl(214 50% 26%);
   --chart-1: var(--brand);
-  --chart-2: hsl(248 45% 40%);
+  --chart-2: color-mix(in oklab, var(--brand) 55%, black);
   --chart-3: var(--success);
   --chart-4: var(--warning);
   --chart-5: var(--info);
@@ -214,4 +214,9 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent) transparent;
+}
+
+/* Appearance switches (set on <html> by components/app/brand.tsx). */
+html[data-dither="off"] .dither > canvas {
+  display: none;
 }

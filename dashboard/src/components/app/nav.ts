@@ -20,6 +20,7 @@ import {
   LinkIcon,
   ListTreeIcon,
   MagnetIcon,
+  PaletteIcon,
   RepeatIcon,
   RouteIcon,
   SettingsIcon,
@@ -112,6 +113,7 @@ export const WEBSITE_NAV: { label: string; items: WebsiteNavItem[] }[] = [
 
 export const SETTINGS_NAV: NavItem[] = [
   { label: "Profile", icon: UserIcon, to: "/settings/profile" },
+  { label: "Appearance", icon: PaletteIcon, to: "/settings/appearance" },
   {
     label: "Preferences",
     icon: SlidersHorizontalIcon,
@@ -128,6 +130,7 @@ export const ADMIN_NAV: NavItem[] = [
   { label: "Teams", icon: BoxesIcon, to: "/admin/teams", admin: true },
   { label: "Websites", icon: GlobeIcon, to: "/admin/websites", admin: true },
   { label: "Security", icon: ShieldIcon, to: "/admin/security", admin: true },
+  { label: "Branding", icon: PaletteIcon, to: "/admin/branding", admin: true },
 ]
 
 export const FOOTER_NAV: NavItem[] = [

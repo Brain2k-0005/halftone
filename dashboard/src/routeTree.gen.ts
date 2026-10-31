@@ -16,6 +16,7 @@ import { Route as AppAdminRouteRouteImport } from './routes/_app/admin/route'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as ShareSlugRouteImport } from './routes/share/$slug'
 import { Route as AppAdminIndexRouteImport } from './routes/_app/admin/index'
+import { Route as AppAdminBrandingRouteImport } from './routes/_app/admin/branding'
 import { Route as AppAdminSecurityRouteImport } from './routes/_app/admin/security'
 import { Route as AppBoardsIndexRouteImport } from './routes/_app/boards/index'
 import { Route as AppBoardsBoardIdRouteImport } from './routes/_app/boards/$boardId'
@@ -25,6 +26,7 @@ import { Route as AppPixelsIndexRouteImport } from './routes/_app/pixels/index'
 import { Route as AppPixelsPixelIdRouteImport } from './routes/_app/pixels/$pixelId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsApiKeysRouteImport } from './routes/_app/settings/api-keys'
+import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
 import { Route as AppSettingsPreferencesRouteImport } from './routes/_app/settings/preferences'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
@@ -95,6 +97,11 @@ const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
+const AppAdminBrandingRoute = AppAdminBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
 const AppAdminSecurityRoute = AppAdminSecurityRouteImport.update({
   id: '/security',
   path: '/security',
@@ -138,6 +145,11 @@ const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
 const AppSettingsApiKeysRoute = AppSettingsApiKeysRouteImport.update({
   id: '/api-keys',
   path: '/api-keys',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAppearanceRoute = AppSettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
   getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppSettingsPreferencesRoute = AppSettingsPreferencesRouteImport.update({
@@ -345,11 +357,13 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/share/$slug': typeof ShareSlugRoute
   '/websites/$websiteId': typeof AppWebsitesWebsiteIdRouteRouteWithChildren
+  '/admin/branding': typeof AppAdminBrandingRoute
   '/admin/security': typeof AppAdminSecurityRoute
   '/boards/$boardId': typeof AppBoardsBoardIdRoute
   '/links/$linkId': typeof AppLinksLinkIdRoute
   '/pixels/$pixelId': typeof AppPixelsPixelIdRoute
   '/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/preferences': typeof AppSettingsPreferencesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -394,11 +408,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/share/$slug': typeof ShareSlugRoute
   '/': typeof AppIndexRoute
+  '/admin/branding': typeof AppAdminBrandingRoute
   '/admin/security': typeof AppAdminSecurityRoute
   '/boards/$boardId': typeof AppBoardsBoardIdRoute
   '/links/$linkId': typeof AppLinksLinkIdRoute
   '/pixels/$pixelId': typeof AppPixelsPixelIdRoute
   '/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/preferences': typeof AppSettingsPreferencesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -448,11 +464,13 @@ export interface FileRoutesById {
   '/share/$slug': typeof ShareSlugRoute
   '/_app/': typeof AppIndexRoute
   '/_app/websites/$websiteId': typeof AppWebsitesWebsiteIdRouteRouteWithChildren
+  '/_app/admin/branding': typeof AppAdminBrandingRoute
   '/_app/admin/security': typeof AppAdminSecurityRoute
   '/_app/boards/$boardId': typeof AppBoardsBoardIdRoute
   '/_app/links/$linkId': typeof AppLinksLinkIdRoute
   '/_app/pixels/$pixelId': typeof AppPixelsPixelIdRoute
   '/_app/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/preferences': typeof AppSettingsPreferencesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
@@ -502,11 +520,13 @@ export interface FileRouteTypes {
     | '/settings'
     | '/share/$slug'
     | '/websites/$websiteId'
+    | '/admin/branding'
     | '/admin/security'
     | '/boards/$boardId'
     | '/links/$linkId'
     | '/pixels/$pixelId'
     | '/settings/api-keys'
+    | '/settings/appearance'
     | '/settings/preferences'
     | '/settings/profile'
     | '/settings/security'
@@ -551,11 +571,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/share/$slug'
     | '/'
+    | '/admin/branding'
     | '/admin/security'
     | '/boards/$boardId'
     | '/links/$linkId'
     | '/pixels/$pixelId'
     | '/settings/api-keys'
+    | '/settings/appearance'
     | '/settings/preferences'
     | '/settings/profile'
     | '/settings/security'
@@ -604,11 +626,13 @@ export interface FileRouteTypes {
     | '/share/$slug'
     | '/_app/'
     | '/_app/websites/$websiteId'
+    | '/_app/admin/branding'
     | '/_app/admin/security'
     | '/_app/boards/$boardId'
     | '/_app/links/$linkId'
     | '/_app/pixels/$pixelId'
     | '/_app/settings/api-keys'
+    | '/_app/settings/appearance'
     | '/_app/settings/preferences'
     | '/_app/settings/profile'
     | '/_app/settings/security'
@@ -707,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminIndexRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
+    '/_app/admin/branding': {
+      id: '/_app/admin/branding'
+      path: '/branding'
+      fullPath: '/admin/branding'
+      preLoaderRoute: typeof AppAdminBrandingRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
     '/_app/admin/security': {
       id: '/_app/admin/security'
       path: '/security'
@@ -768,6 +799,13 @@ declare module '@tanstack/react-router' {
       path: '/api-keys'
       fullPath: '/settings/api-keys'
       preLoaderRoute: typeof AppSettingsApiKeysRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/appearance': {
+      id: '/_app/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AppSettingsAppearanceRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/settings/preferences': {
@@ -1019,6 +1057,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppAdminRouteRouteChildren {
+  AppAdminBrandingRoute: typeof AppAdminBrandingRoute
   AppAdminSecurityRoute: typeof AppAdminSecurityRoute
   AppAdminIndexRoute: typeof AppAdminIndexRoute
   AppAdminTeamsTeamIdRoute: typeof AppAdminTeamsTeamIdRoute
@@ -1030,6 +1069,7 @@ interface AppAdminRouteRouteChildren {
 }
 
 const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
+  AppAdminBrandingRoute: AppAdminBrandingRoute,
   AppAdminSecurityRoute: AppAdminSecurityRoute,
   AppAdminIndexRoute: AppAdminIndexRoute,
   AppAdminTeamsTeamIdRoute: AppAdminTeamsTeamIdRoute,
@@ -1046,6 +1086,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 
 interface AppSettingsRouteRouteChildren {
   AppSettingsApiKeysRoute: typeof AppSettingsApiKeysRoute
+  AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
   AppSettingsPreferencesRoute: typeof AppSettingsPreferencesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
@@ -1057,6 +1098,7 @@ interface AppSettingsRouteRouteChildren {
 
 const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
   AppSettingsApiKeysRoute: AppSettingsApiKeysRoute,
+  AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
   AppSettingsPreferencesRoute: AppSettingsPreferencesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,

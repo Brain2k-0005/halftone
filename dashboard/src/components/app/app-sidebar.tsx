@@ -13,7 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { useCommandMenu } from "@/components/app/command-menu"
-import { Logo } from "@/components/app/logo"
+import { AppLogo, useBranding } from "@/components/app/brand"
 import { FOOTER_NAV, MAIN_NAV, WEBSITE_NAV } from "@/components/app/nav"
 import { useTheme } from "@/components/app/theme"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -249,6 +249,7 @@ export function SidebarNav({
 }) {
   const { pathname } = useLocation()
   const { open } = useCommandMenu()
+  const branding = useBranding()
   const { websiteId } = useParams({ strict: false }) as { websiteId?: string }
   const current = websites.find((w) => w.id === websiteId)
 
@@ -265,11 +266,11 @@ export function SidebarNav({
           collapsed && "justify-center px-0"
         )}
       >
-        <Logo className="size-[22px] shrink-0 text-[var(--sidebar-fg-active)]" />
+        <AppLogo className="size-[22px] shrink-0 text-[var(--sidebar-fg-active)]" />
         {!collapsed && (
           <>
             <p className="min-w-0 flex-1 truncate text-sm font-semibold tracking-tight text-[var(--sidebar-fg-active)]">
-              Umami
+              {branding.name}
             </p>
             {onToggle && (
               <button

@@ -1,14 +1,14 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router"
 import { LoaderCircleIcon } from "lucide-react"
 import { useState, type ComponentProps, type FormEvent } from "react"
-import { Logo } from "@/components/app/logo"
+import { AppLogo, useBranding } from "@/components/app/brand"
 import { loginFn, meFn } from "@/lib/api"
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
     if (await meFn()) throw redirect({ to: "/" })
   },
-  head: () => ({ meta: [{ title: "Sign in · Umami" }] }),
+
   component: LoginPage,
 })
 
@@ -29,6 +29,7 @@ function Field({
 
 function LoginPage() {
   const router = useRouter()
+  const branding = useBranding()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
@@ -55,8 +56,10 @@ function LoginPage() {
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <header className="flex h-[52px] items-center gap-2.5 px-5">
-        <Logo className="size-[22px]" />
-        <span className="text-sm font-semibold tracking-tight">Umami</span>
+        <AppLogo className="size-[22px]" />
+        <span className="text-sm font-semibold tracking-tight">
+          {branding.name}
+        </span>
       </header>
       <main className="flex flex-1 flex-col justify-center px-5 py-8">
         <div className="mx-auto w-full max-w-sm">

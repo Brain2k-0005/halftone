@@ -1,5 +1,8 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import { appearanceScript, useBranding } from "@/components/app/brand"
 import { themeScript } from "@/components/app/theme"
+import { htmlAppearance } from "@/lib/branding"
+import { getBrandingFn } from "@/lib/branding-fns"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useState } from "react"
 import { Toaster } from "@/components/ui/sonner"
@@ -8,16 +11,17 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import appCss from "../styles.css?url"
 
 export const Route = createRootRoute({
-  head: () => ({
+  loader: () => getBrandingFn(),
+  head: ({ loaderData }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "robots", content: "noindex,nofollow" },
-      { title: "Umami" },
+      { title: loaderData?.name ?? "Umami" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico" },
+      { rel: "icon", href: loaderData?.logo || "/favicon.ico" },
     ],
   }),
   notFoundComponent: () => (
@@ -45,10 +49,14 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const branding = useBranding()
+  const { style, dither } = htmlAppearance(branding.appearance)
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={style} data-dither={dither}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          dangerouslySetInnerHTML={{ __html: `${themeScript};${appearanceScript}` }}
+        />
         <HeadContent />
       </head>
       <body>
