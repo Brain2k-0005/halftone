@@ -27,7 +27,7 @@ export const Route = createRootRoute({
     <main className="flex min-h-svh flex-col items-center justify-center gap-3 p-6 text-center">
       <h1 className="text-lg font-semibold">Something went wrong</h1>
       <p className="max-w-md text-sm text-muted-foreground">
-        {error instanceof Error ? error.message : String(error)}
+        {(error instanceof Error ? error.message : String(error)).slice(0, 300)}
       </p>
       <button
         type="button"

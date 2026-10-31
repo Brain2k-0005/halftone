@@ -2,6 +2,9 @@ packages:
   - '**'
   - '!dist'
   - '!**/dist/**'
+  # Standalone npm project (TanStack Start frontend), not part of the Umami workspace.
+  - '!dashboard'
+  - '!dashboard/**'
 allowBuilds:
   '@parcel/watcher': false
   '@prisma/engines': true

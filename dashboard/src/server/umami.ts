@@ -61,10 +61,27 @@ export async function umami<T>(
     body: init.body ? JSON.stringify(init.body) : undefined,
   })
 
-  if (!res.ok) {
+  const isJson = res.headers.get("content-type")?.includes("application/json")
+
+  if (!res.ok || !isJson) {
     if (res.status === 401) clearToken()
-    const text = await res.text().catch(() => "")
-    throw new UmamiError(text || res.statusText, res.status)
+    // Only surface short JSON error messages; HTML error pages stay in the server log.
+    const body = isJson
+      ? await res.json().catch(() => null)
+      : await res.text().catch(() => "")
+    const detail =
+      typeof body === "object" && body && "message" in body
+        ? String(body.message)
+        : typeof body === "object" && body && "error" in body
+          ? String(body.error)
+          : ""
+    if (!isJson)
+      console.error(`[umami] ${res.status} ${path}`, String(body).slice(0, 500))
+    throw new UmamiError(
+      detail ||
+        `The Umami API returned ${res.status} for ${path.split("?")[0]}.`,
+      res.status
+    )
   }
 
   return (await res.json()) as T
