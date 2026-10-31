@@ -1,21 +1,21 @@
+/*
+ * The Halftone mark: a 7×7 print raster clipped to a circle, dots shrinking toward the bottom right.
+ * Drawn in the theme's accent (--brand), so it follows the selected theme.
+ */
+const DOTS = Array.from({ length: 49 }, (_, i) => {
+  const x = i % 7
+  const y = Math.floor(i / 7)
+  const cx = 4 + x * 4
+  const cy = 4 + y * 4
+  return { cx, cy, r: 0.4 + 1.6 * (1 - (x + y) / 12) }
+}).filter((d) => (d.cx - 16) ** 2 + (d.cy - 16) ** 2 <= 15 ** 2)
+
 export function Logo({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 428 389.11"
-      fill="currentColor"
-      className={className}
-      aria-hidden
-    >
-      <circle
-        cx="214.15"
-        cy="181"
-        r="171"
-        fill="none"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeWidth="28"
-      />
-      <path d="M413 134.11H15.29a15 15 0 0 0-15 15v15.3C.12 168 0 171.52 0 175.11c0 118.19 95.81 214 214 214 116.4 0 211.1-92.94 213.93-208.67 0-.44.07-.88.07-1.33v-30a15 15 0 0 0-15-15Z" />
+    <svg viewBox="0 0 32 32" className={className} aria-hidden>
+      {DOTS.map((d) => (
+        <circle key={`${d.cx}-${d.cy}`} cx={d.cx} cy={d.cy} r={d.r.toFixed(2)} fill="var(--brand)" />
+      ))}
     </svg>
   )
 }

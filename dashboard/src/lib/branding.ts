@@ -30,12 +30,39 @@ export const RADII = [
 
 export type RadiusId = (typeof RADII)[number]["id"]
 
+export const SHELLS = [
+  {
+    id: "sidebar",
+    label: "Sidebar",
+    description: "Classic sidebar, content right next to it",
+  },
+  {
+    id: "inset",
+    label: "Inset",
+    description: "Shell in the background, content in its own container",
+  },
+  {
+    id: "floating",
+    label: "Floating",
+    description: "Sidebar and content as separate floating cards",
+  },
+  {
+    id: "inbox",
+    label: "Inbox",
+    description:
+      "Icon rail for the main areas, a second column for their pages",
+  },
+] as const
+
+export type ShellId = (typeof SHELLS)[number]["id"]
+
 export interface Appearance {
   /** A preset id, or "custom" to use `accent`. */
   preset: PresetId | "custom"
   accent: string
   radius: RadiusId
   dither: boolean
+  shell: ShellId
 }
 
 export interface Branding {
@@ -50,10 +77,11 @@ export const DEFAULT_APPEARANCE: Appearance = {
   accent: "#6d5dfc",
   radius: "default",
   dither: true,
+  shell: "sidebar",
 }
 
 export const DEFAULT_BRANDING: Branding = {
-  name: "Umami",
+  name: "Halftone",
   logo: "",
   appearance: DEFAULT_APPEARANCE,
 }
@@ -81,6 +109,9 @@ export function sanitizeAppearance(
       ? (a.radius as RadiusId)
       : fallback.radius,
     dither: typeof a.dither === "boolean" ? a.dither : fallback.dither,
+    shell: SHELLS.some((x) => x.id === a.shell)
+      ? (a.shell as ShellId)
+      : fallback.shell,
   }
 }
 
@@ -129,4 +160,5 @@ export function htmlAppearance(a: Appearance) {
   }
 }
 
+/** Cookie holding the user's own appearance, so the server renders the right theme and shell. */
 export const APPEARANCE_KEY = "umami-appearance"

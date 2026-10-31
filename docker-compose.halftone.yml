@@ -1,0 +1,65 @@
+# Halftone: PostgreSQL + the Umami API (unchanged upstream image) + the Halftone dashboard.
+#
+#   cp .env.halftone.example .env
+#   docker compose -f docker-compose.halftone.yml --env-file .env up -d
+#
+# Dashboard:  http://localhost:3100   (sign in with admin / umami, then change the password)
+# Umami API:  http://localhost:3000   (serves the tracker script, /api/send, short links /q and pixels /p;
+#                                      put it behind your public domain, it must be reachable by your visitors)
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - halftone-db:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    # The analytics engine: pinned to the Umami version the dashboard is built and tested against.
+    image: ghcr.io/umami-software/umami:3.4.1
+    environment:
+      DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD}@db:5432/umami
+      APP_SECRET: ${APP_SECRET:?set APP_SECRET in .env}
+      TWO_FACTOR_ENCRYPTION_KEY: ${TWO_FACTOR_ENCRYPTION_KEY:-}
+      # The old Umami web UI is replaced by the dashboard; the API, tracker and share endpoints stay.
+      DISABLE_UI: "1"
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/heartbeat || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  dashboard:
+    build: ./dashboard
+    environment:
+      UMAMI_API_URL: http://api:3000/api
+      UMAMI_PUBLIC_URL: ${UMAMI_PUBLIC_URL:-http://localhost:3000}
+      UMAMI_TIMEZONE: ${TIMEZONE:-UTC}
+      BRAND_NAME: ${BRAND_NAME:-Halftone}
+    ports:
+      - "${DASHBOARD_PORT:-3100}:3000"
+    volumes:
+      - halftone-branding:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  halftone-db:
+  halftone-branding:
