@@ -1,5 +1,15 @@
-import { CheckIcon, CopyIcon, LoaderCircleIcon, type LucideIcon } from "lucide-react"
-import { useState, type ComponentProps, type FormEvent, type ReactNode } from "react"
+import {
+  CheckIcon,
+  CopyIcon,
+  LoaderCircleIcon,
+  type LucideIcon,
+} from "lucide-react"
+import {
+  useState,
+  type ComponentProps,
+  type FormEvent,
+  type ReactNode,
+} from "react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -40,12 +50,25 @@ export function PageHeader({
   className?: string
 }) {
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-3", className)}>
+    <div
+      className={cn(
+        "flex flex-wrap items-end justify-between gap-3",
+        className
+      )}
+    >
       <div className="min-w-0">
-        <h1 className="text-xl leading-tight font-semibold tracking-tight">{title}</h1>
-        {description && <p className="mt-1 text-[13px] text-muted-foreground">{description}</p>}
+        <h1 className="text-xl leading-tight font-semibold tracking-tight">
+          {title}
+        </h1>
+        {description && (
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            {description}
+          </p>
+        )}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      {actions && (
+        <div className="flex flex-wrap items-center gap-2">{actions}</div>
+      )}
     </div>
   )
 }
@@ -90,7 +113,13 @@ export function Button({
 }
 
 /** Square violet tile for list rows (like the event rows in the reference). */
-export function IconTile({ icon: Icon, className }: { icon: LucideIcon; className?: string }) {
+export function IconTile({
+  icon: Icon,
+  className,
+}: {
+  icon: LucideIcon
+  className?: string
+}) {
   return (
     <span
       className={cn(
@@ -117,14 +146,23 @@ export function EmptyState({
   className?: string
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-2 px-6 py-14 text-center", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-2 px-6 py-14 text-center",
+        className
+      )}
+    >
       {Icon && (
         <span className="mb-1 flex size-10 items-center justify-center rounded-xl border bg-background text-muted-foreground">
           <Icon className="size-5" strokeWidth={1.75} />
         </span>
       )}
       <p className="text-sm font-medium">{title}</p>
-      {description && <p className="max-w-sm text-[13px] text-muted-foreground">{description}</p>}
+      {description && (
+        <p className="max-w-sm text-[13px] text-muted-foreground">
+          {description}
+        </p>
+      )}
       {action && <div className="mt-2">{action}</div>}
     </div>
   )
@@ -150,10 +188,21 @@ export function LoadingRows({ rows = 5 }: { rows?: number }) {
   )
 }
 
-export function ErrorText({ error, className }: { error: unknown; className?: string }) {
+export function ErrorText({
+  error,
+  className,
+}: {
+  error: unknown
+  className?: string
+}) {
   if (!error) return null
   return (
-    <p className={cn("px-5 py-10 text-center text-sm text-destructive", className)}>
+    <p
+      className={cn(
+        "px-5 py-10 text-center text-sm text-destructive",
+        className
+      )}
+    >
       {error instanceof Error ? error.message : String(error)}
     </p>
   )
@@ -188,7 +237,12 @@ export function DataTable<T>({
 }) {
   if (error) return <ErrorText error={error} className="border-t" />
   if (isLoading) return <LoadingRows />
-  if (!rows?.length) return <div className="border-t">{empty ?? <EmptyState title="Nothing here yet" />}</div>
+  if (!rows?.length)
+    return (
+      <div className="border-t">
+        {empty ?? <EmptyState title="Nothing here yet" />}
+      </div>
+    )
 
   return (
     <div className="overflow-x-auto border-t">
@@ -214,12 +268,19 @@ export function DataTable<T>({
             <tr
               key={rowKey(row)}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
-              className={cn("transition-colors", onRowClick && "cursor-pointer hover:bg-accent/40")}
+              className={cn(
+                "transition-colors",
+                onRowClick && "cursor-pointer hover:bg-accent/40"
+              )}
             >
               {columns.map((c) => (
                 <td
                   key={c.key}
-                  className={cn("h-12 px-5 align-middle", c.align === "right" && "tabular text-right", c.className)}
+                  className={cn(
+                    "h-12 px-5 align-middle",
+                    c.align === "right" && "tabular text-right",
+                    c.className
+                  )}
                 >
                   {c.cell(row)}
                 </td>
@@ -248,13 +309,18 @@ export function Pagination({
   return (
     <div className="flex items-center justify-between gap-3 border-t px-5 py-3 text-[13px] text-muted-foreground">
       <span>
-        {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, count)} of {count}
+        {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, count)} of{" "}
+        {count}
       </span>
       <div className="flex gap-2">
         <Button size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)}>
           Previous
         </Button>
-        <Button size="sm" disabled={page >= pages} onClick={() => onPage(page + 1)}>
+        <Button
+          size="sm"
+          disabled={page >= pages}
+          onClick={() => onPage(page + 1)}
+        >
           Next
         </Button>
       </div>
@@ -302,7 +368,11 @@ export function SelectField({
   hint,
   className,
   ...props
-}: ComponentProps<"select"> & { label: string; options: { value: string; label: string }[]; hint?: ReactNode }) {
+}: ComponentProps<"select"> & {
+  label: string
+  options: { value: string; label: string }[]
+  hint?: ReactNode
+}) {
   return (
     <label className={cn("grid gap-1.5", className)}>
       <span className="text-[13px] font-medium">{label}</span>
@@ -318,7 +388,15 @@ export function SelectField({
   )
 }
 
-export function CopyField({ label, value, multiline }: { label?: string; value: string; multiline?: boolean }) {
+export function CopyField({
+  label,
+  value,
+  multiline,
+}: {
+  label?: string
+  value: string
+  multiline?: boolean
+}) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
     await navigator.clipboard.writeText(value)
@@ -331,9 +409,17 @@ export function CopyField({ label, value, multiline }: { label?: string; value: 
       {label && <span className="text-[13px] font-medium">{label}</span>}
       <div className="relative">
         {multiline ? (
-          <textarea readOnly value={value} className={cn(FIELD, "min-h-24 py-2 pr-10 font-mono text-xs")} />
+          <textarea
+            readOnly
+            value={value}
+            className={cn(FIELD, "min-h-24 py-2 pr-10 font-mono text-xs")}
+          />
         ) : (
-          <input readOnly value={value} className={cn(FIELD, "h-9 pr-10 font-mono text-xs")} />
+          <input
+            readOnly
+            value={value}
+            className={cn(FIELD, "h-9 pr-10 font-mono text-xs")}
+          />
         )}
         <button
           type="button"
@@ -341,7 +427,11 @@ export function CopyField({ label, value, multiline }: { label?: string; value: 
           aria-label="Copy"
           className="absolute top-1.5 right-1.5 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
         >
-          {copied ? <CheckIcon className="size-3.5" /> : <CopyIcon className="size-3.5" />}
+          {copied ? (
+            <CheckIcon className="size-3.5" />
+          ) : (
+            <CopyIcon className="size-3.5" />
+          )}
         </button>
       </div>
     </div>
@@ -387,7 +477,9 @@ export function FormDialog({
         <form onSubmit={submit} className="grid gap-5">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            {description && <DialogDescription>{description}</DialogDescription>}
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
+            )}
           </DialogHeader>
           <div className="grid gap-4">{children}</div>
           <DialogFooter>
@@ -436,7 +528,9 @@ export function ConfirmDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+          {description && (
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -445,7 +539,11 @@ export function ConfirmDialog({
               e.preventDefault()
               void confirm()
             }}
-            className={danger ? "bg-destructive text-white hover:bg-destructive/90" : undefined}
+            className={
+              danger
+                ? "bg-destructive text-white hover:bg-destructive/90"
+                : undefined
+            }
           >
             {pending && <LoaderCircleIcon className="size-4 animate-spin" />}
             {confirmLabel}
@@ -457,12 +555,18 @@ export function ConfirmDialog({
 }
 
 /** Underlined tabs for sub-areas (settings, admin, reports) – like the reference's area tabs. */
-export function AreaTabs({ children, className }: { children: ReactNode; className?: string }) {
+export function AreaTabs({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
   return (
     <div
       role="tablist"
       className={cn(
-        "flex shrink-0 items-center gap-1 overflow-x-auto border-b [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "flex shrink-0 [scrollbar-width:none] items-center gap-1 overflow-x-auto border-b [&::-webkit-scrollbar]:hidden",
         className
       )}
     >

@@ -6,6 +6,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import type { Point } from "@/lib/api"
+import { formatAxis } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 const config = {
@@ -60,7 +61,8 @@ export function TrafficChart({
         <YAxis
           tickLine={false}
           axisLine={false}
-          width={44}
+          width={48}
+          tickFormatter={formatAxis}
           allowDecimals={false}
         />
         <ChartTooltip

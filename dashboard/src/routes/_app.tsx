@@ -32,7 +32,10 @@ export const Route = createFileRoute("/_app")({
     return { user }
   },
   loader: async ({ context }) => {
-    const [websites, { teams, teamId }] = await Promise.all([websitesFn(), teamsFn()])
+    const [websites, { teams, teamId }] = await Promise.all([
+      websitesFn(),
+      teamsFn(),
+    ])
     return { user: context.user, websites, teams, teamId }
   },
   component: AppLayout,

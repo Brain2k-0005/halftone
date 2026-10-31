@@ -26,7 +26,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import type { Team, User, Website } from "@/lib/api"
 import { initials } from "@/lib/format"
 import { setTeamCookie } from "@/lib/team"
@@ -38,8 +42,10 @@ import { cn } from "@/lib/utils"
  * the user card at the bottom. All entries come from components/app/nav.ts.
  */
 
-const ROW = "relative flex h-8 w-full items-center gap-2.5 rounded-lg px-2.5 text-[13px] font-medium transition-colors"
-const IDLE = "text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-fg-active)]"
+const ROW =
+  "relative flex h-8 w-full items-center gap-2.5 rounded-lg px-2.5 text-[13px] font-medium transition-colors"
+const IDLE =
+  "text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--sidebar-fg-active)]"
 const ACTIVE = "bg-[var(--sidebar-active)] text-[var(--sidebar-fg-active)]"
 
 function Counter({ count }: { count: number }) {
@@ -51,8 +57,19 @@ function Counter({ count }: { count: number }) {
   )
 }
 
-function GroupLabel({ children, collapsed, first }: { children: string; collapsed: boolean; first?: boolean }) {
-  if (collapsed) return first ? null : <div className="my-2 h-px bg-[var(--sidebar-border)]" />
+function GroupLabel({
+  children,
+  collapsed,
+  first,
+}: {
+  children: string
+  collapsed: boolean
+  first?: boolean
+}) {
+  if (collapsed)
+    return first ? null : (
+      <div className="my-2 h-px bg-[var(--sidebar-border)]" />
+    )
   return (
     <p
       className={cn(
@@ -87,10 +104,19 @@ function NavRow({
       to={href as "/"}
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
-      className={cn(ROW, active ? ACTIVE : IDLE, collapsed && "justify-center px-0")}
+      className={cn(
+        ROW,
+        active ? ACTIVE : IDLE,
+        collapsed && "justify-center px-0"
+      )}
     >
-      <Icon className={cn("size-4 shrink-0", active && "text-brand")} strokeWidth={1.75} />
-      {!collapsed && <span className="truncate whitespace-nowrap">{label}</span>}
+      <Icon
+        className={cn("size-4 shrink-0", active && "text-brand")}
+        strokeWidth={1.75}
+      />
+      {!collapsed && (
+        <span className="truncate whitespace-nowrap">{label}</span>
+      )}
       {!collapsed && <Counter count={count} />}
     </Link>
   )
@@ -135,7 +161,8 @@ function UserCard({
               type="button"
               className={cn(
                 "flex w-full items-center gap-2.5 rounded-xl border bg-card p-2 text-left shadow-xs transition-colors hover:bg-[var(--sidebar-hover)]",
-                collapsed && "justify-center border-transparent bg-transparent p-1 shadow-none"
+                collapsed &&
+                  "justify-center border-transparent bg-transparent p-1 shadow-none"
               )}
             >
               <Avatar className="size-8 shrink-0">
@@ -146,7 +173,9 @@ function UserCard({
               {!collapsed && (
                 <>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13px] leading-tight font-medium">{team?.name ?? user.username}</p>
+                    <p className="truncate text-[13px] leading-tight font-medium">
+                      {team?.name ?? user.username}
+                    </p>
                     <p className="truncate text-[11px] leading-tight text-muted-foreground capitalize">
                       {team ? `Team · ${user.username}` : user.role}
                     </p>
@@ -160,13 +189,17 @@ function UserCard({
         <DropdownMenuContent side="top" align="start" className="min-w-60">
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium">{user.username}</p>
-            <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+            <p className="text-xs text-muted-foreground capitalize">
+              {user.role}
+            </p>
           </div>
           {teams.length > 0 && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-xs text-muted-foreground">Workspace</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  Workspace
+                </DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => switchTeam(null)}>
                   <UserIcon /> Personal
                   {!teamId && <CheckIcon className="ml-auto" />}
@@ -220,11 +253,18 @@ export function SidebarNav({
   const current = websites.find((w) => w.id === websiteId)
 
   const isActive = (href: string, exact = false) =>
-    href === "/" || exact ? pathname === href : pathname === href || pathname.startsWith(href + "/")
+    href === "/" || exact
+      ? pathname === href
+      : pathname === href || pathname.startsWith(href + "/")
 
   return (
     <div className="flex h-full flex-col">
-      <div className={cn("flex h-[52px] shrink-0 items-center gap-2.5 px-3.5", collapsed && "justify-center px-0")}>
+      <div
+        className={cn(
+          "flex h-[52px] shrink-0 items-center gap-2.5 px-3.5",
+          collapsed && "justify-center px-0"
+        )}
+      >
         <Logo className="size-[22px] shrink-0 text-[var(--sidebar-fg-active)]" />
         {!collapsed && (
           <>
@@ -265,20 +305,26 @@ export function SidebarNav({
           aria-label="Search"
           className={cn(
             "flex h-8 w-full items-center gap-2 rounded-lg border bg-background px-2.5 text-[13px] text-muted-foreground shadow-xs transition-colors hover:text-foreground",
-            collapsed && "justify-center border-transparent bg-transparent px-0 shadow-none"
+            collapsed &&
+              "justify-center border-transparent bg-transparent px-0 shadow-none"
           )}
         >
           <SearchIcon className="size-3.5 shrink-0" />
           {!collapsed && (
             <>
               <span className="flex-1 text-left">Search …</span>
-              <kbd className="rounded border bg-muted px-1.5 py-px font-sans text-[10px] font-medium">⌘K</kbd>
+              <kbd className="rounded border bg-muted px-1.5 py-px font-sans text-[10px] font-medium">
+                ⌘K
+              </kbd>
             </>
           )}
         </button>
       </div>
 
-      <nav aria-label="Navigation" className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-2.5 pb-2">
+      <nav
+        aria-label="Navigation"
+        className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-2.5 pb-2"
+      >
         {MAIN_NAV.map((group, gi) => (
           <div key={group.label}>
             <GroupLabel collapsed={collapsed} first={gi === 0}>
@@ -291,7 +337,10 @@ export function SidebarNav({
                   icon={item.icon}
                   label={item.label}
                   href={item.to}
-                  active={isActive(item.to, item.to === "/websites" && !!current)}
+                  active={isActive(
+                    item.to,
+                    item.to === "/websites" && !!current
+                  )}
                   collapsed={collapsed}
                   onNavigate={onNavigate}
                 />
@@ -303,7 +352,9 @@ export function SidebarNav({
         {current &&
           WEBSITE_NAV.map((group, gi) => (
             <div key={group.label}>
-              <GroupLabel collapsed={collapsed}>{gi === 0 ? current.name : group.label}</GroupLabel>
+              <GroupLabel collapsed={collapsed}>
+                {gi === 0 ? current.name : group.label}
+              </GroupLabel>
               <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const href = `/websites/${current.id}${item.path}`
@@ -337,7 +388,10 @@ export function SidebarNav({
                   className={cn(ROW, IDLE)}
                 >
                   <span
-                    className={cn("mx-[5px] size-1.5 shrink-0 rounded-full", w.active > 0 ? "bg-success" : "bg-brand")}
+                    className={cn(
+                      "mx-[5px] size-1.5 shrink-0 rounded-full",
+                      w.active > 0 ? "bg-success" : "bg-brand"
+                    )}
                     aria-hidden
                   />
                   <span className="truncate whitespace-nowrap">{w.name}</span>
@@ -362,7 +416,13 @@ export function SidebarNav({
           />
         ))}
       </div>
-      <UserCard user={user} teams={teams} teamId={teamId} collapsed={collapsed} onLogout={onLogout} />
+      <UserCard
+        user={user}
+        teams={teams}
+        teamId={teamId}
+        collapsed={collapsed}
+        onLogout={onLogout}
+      />
     </div>
   )
 }

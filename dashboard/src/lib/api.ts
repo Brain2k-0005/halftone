@@ -21,14 +21,21 @@ export interface Team {
 /** Websites of the selected workspace: a team (cookie) or the user's personal websites. */
 function websitesPath() {
   const teamId = getCookie(TEAM_COOKIE)
-  return teamId && /^[0-9a-f-]{36}$/i.test(teamId) ? `/teams/${teamId}/websites` : "/websites"
+  return teamId && /^[0-9a-f-]{36}$/i.test(teamId)
+    ? `/teams/${teamId}/websites`
+    : "/websites"
 }
 
 export const teamsFn = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    const res = await umami<{ data: Team[] }>("/me/teams", { query: { pageSize: 100 } })
+    const res = await umami<{ data: Team[] }>("/me/teams", {
+      query: { pageSize: 100 },
+    })
     const teamId = getCookie(TEAM_COOKIE) ?? null
-    return { teams: res.data, teamId: res.data.some((t) => t.id === teamId) ? teamId : null }
+    return {
+      teams: res.data,
+      teamId: res.data.some((t) => t.id === teamId) ? teamId : null,
+    }
   } catch {
     return { teams: [] as Team[], teamId: null }
   }

@@ -112,7 +112,11 @@ export const WEBSITE_NAV: { label: string; items: WebsiteNavItem[] }[] = [
 
 export const SETTINGS_NAV: NavItem[] = [
   { label: "Profile", icon: UserIcon, to: "/settings/profile" },
-  { label: "Preferences", icon: SlidersHorizontalIcon, to: "/settings/preferences" },
+  {
+    label: "Preferences",
+    icon: SlidersHorizontalIcon,
+    to: "/settings/preferences",
+  },
   { label: "Security", icon: ShieldIcon, to: "/settings/security" },
   { label: "API keys", icon: KeyRoundIcon, to: "/settings/api-keys" },
   { label: "Websites", icon: GlobeIcon, to: "/settings/websites" },

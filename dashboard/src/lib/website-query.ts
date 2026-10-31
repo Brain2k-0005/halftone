@@ -1,6 +1,11 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useMemo } from "react"
-import { DEFAULT_RANGE, isRange, resolveRange, type RangeKey } from "@/lib/range"
+import {
+  DEFAULT_RANGE,
+  isRange,
+  resolveRange,
+  type RangeKey,
+} from "@/lib/range"
 
 /*
  * Shared date range + filter state for every website page. It lives in the URL search params
@@ -59,7 +64,9 @@ export interface WebsiteSearch {
 const FILTER_KEYS = new Set<string>(FILTER_FIELDS.map((f) => f.key))
 
 /** validateSearch for the website layout route. Filters are flattened into the URL (`?path=eq./blog`). */
-export function validateWebsiteSearch(s: Record<string, unknown>): WebsiteSearch & Record<string, unknown> {
+export function validateWebsiteSearch(
+  s: Record<string, unknown>
+): WebsiteSearch & Record<string, unknown> {
   const out: Record<string, unknown> = {}
   if (isRange(s.range)) out.range = s.range
   const startAt = Number(s.startAt)
@@ -83,12 +90,17 @@ function unitFor(ms: number) {
   return "month"
 }
 
-export const browserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone
+export const browserTimezone = () =>
+  Intl.DateTimeFormat().resolvedOptions().timeZone
 
 /** Resolves the URL state into the query every Umami analytics endpoint understands. */
-export function resolveWebsiteQuery(search: Record<string, unknown>, timezone = browserTimezone()) {
+export function resolveWebsiteQuery(
+  search: Record<string, unknown>,
+  timezone = browserTimezone()
+) {
   const range = isRange(search.range) ? search.range : DEFAULT_RANGE
-  const custom = typeof search.startAt === "number" && typeof search.endAt === "number"
+  const custom =
+    typeof search.startAt === "number" && typeof search.endAt === "number"
   const { startAt, endAt, unit } = custom
     ? {
         startAt: search.startAt as number,
@@ -129,13 +141,19 @@ export function useSetWebsiteSearch() {
       to: ".",
       search: (prev: Record<string, unknown>) => {
         const next = { ...prev, ...patch }
-        for (const k of Object.keys(next)) if (next[k] === undefined || next[k] === "") delete next[k]
+        for (const k of Object.keys(next))
+          if (next[k] === undefined || next[k] === "") delete next[k]
         return next
       },
     } as never)
 }
 
-export function parseFilter(value: string): { operator: Operator; value: string } {
+export function parseFilter(value: string): {
+  operator: Operator
+  value: string
+} {
   const m = /^(eq|neq|c|dnc)\.(.*)$/.exec(value)
-  return m ? { operator: m[1] as Operator, value: m[2]! } : { operator: "eq", value }
+  return m
+    ? { operator: m[1] as Operator, value: m[2]! }
+    : { operator: "eq", value }
 }

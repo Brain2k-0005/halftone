@@ -38,3 +38,11 @@ export function initials(name: string) {
     .map((p) => p[0]!.toUpperCase())
     .join("")
 }
+
+/** Compact axis ticks so 4-digit values fit narrow chart axes (1600 → "1.6K"). */
+export function formatAxis(value: number) {
+  if (Math.abs(value) >= 1_000_000)
+    return `${Number((value / 1_000_000).toFixed(1))}M`
+  if (Math.abs(value) >= 1000) return `${Number((value / 1000).toFixed(1))}K`
+  return String(value)
+}

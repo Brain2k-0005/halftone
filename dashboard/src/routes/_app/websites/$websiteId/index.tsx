@@ -1,176 +1,90 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import {
   ArrowRightIcon,
   ClockIcon,
-  CompassIcon,
   EyeIcon,
-  FileTextIcon,
-  LogInIcon,
-  LogOutIcon,
-  MapPinIcon,
-  MonitorIcon,
   MousePointerClickIcon,
-  ShareIcon,
-  SmartphoneIcon,
-  TabletIcon,
   UndoIcon,
   UsersIcon,
 } from "lucide-react"
-import { useState, type ReactNode } from "react"
-import { RangeSwitch } from "@/components/app/range-switch"
+import { useState } from "react"
 import { SectionCard, Segmented } from "@/components/app/section-card"
 import { StatGrid } from "@/components/app/stat"
-import { countryName, flag, TopList } from "@/components/app/top-list"
+import { Skeleton } from "@/components/app/ui-kit"
 import { TrafficChart, type ChartMode } from "@/components/app/traffic-chart"
+import { WebsiteToolbar } from "@/components/app/website-controls"
 import {
-  metricsFn,
-  overviewFn,
-  type MetricRow,
-  type MetricType,
-} from "@/lib/api"
+  ENV_TABS,
+  EVENT_TABS,
+  LOCATION_TABS,
+  PAGE_TABS,
+  SOURCE_TABS,
+} from "@/components/traffic/metric-tabs"
+import {
+  bounceRate,
+  MetricsCard,
+  visitDuration,
+  useWebsiteId,
+  type Stats,
+} from "@/components/traffic/shared"
+import { useApi } from "@/lib/api-client"
+import type { Point } from "@/lib/api"
 import { formatDuration, formatNumber, formatPercent } from "@/lib/format"
-import { DEFAULT_RANGE, isRange, RANGES, type RangeKey } from "@/lib/range"
+import { RANGES } from "@/lib/range"
 import { cn } from "@/lib/utils"
-
-const TYPES = [
-  "path",
-  "entry",
-  "exit",
-  "referrer",
-  "channel",
-  "browser",
-  "os",
-  "device",
-  "country",
-  "city",
-  "event",
-] as const
+import { useWebsiteQuery } from "@/lib/website-query"
 
 export const Route = createFileRoute("/_app/websites/$websiteId/")({
-  validateSearch: (s: Record<string, unknown>): { range?: RangeKey } =>
-    isRange(s.range) ? { range: s.range } : {},
-  loaderDeps: ({ search }) => ({ range: search.range ?? DEFAULT_RANGE }),
-  loader: async ({ params, deps }) => {
-    const [overview, ...lists] = await Promise.all([
-      overviewFn({ data: { websiteId: params.websiteId, range: deps.range } }),
-      ...TYPES.map((type) =>
-        metricsFn({
-          data: {
-            websiteId: params.websiteId,
-            range: deps.range,
-            type,
-            limit: 6,
-          },
-        })
-      ),
-    ])
-    const metrics = Object.fromEntries(
-      TYPES.map((t, i) => [t, lists[i]])
-    ) as Record<(typeof TYPES)[number], MetricRow[]>
-    return { overview, metrics }
-  },
   component: WebsiteDashboard,
 })
 
-const DEVICE_ICONS: Record<string, ReactNode> = {
-  desktop: <MonitorIcon />,
-  laptop: <MonitorIcon />,
-  mobile: <SmartphoneIcon />,
-  tablet: <TabletIcon />,
-}
-
-interface Tab {
-  value: MetricType
-  label: string
-  icon?: (row: MetricRow) => ReactNode
-  rowLabel?: (row: MetricRow) => ReactNode
-}
-
-function TabbedList({
-  title,
-  description,
-  tabs,
-  metrics,
-  unit = "visitors",
-  className,
-}: {
-  title: string
-  description: string
-  tabs: Tab[]
-  metrics: Record<string, MetricRow[]>
-  unit?: string
-  className?: string
-}) {
-  const [tab, setTab] = useState(tabs[0]!.value)
-  const active = tabs.find((t) => t.value === tab)!
-
-  return (
-    <SectionCard
-      title={title}
-      description={description}
-      className={className}
-      actions={
-        tabs.length > 1 && (
-          <Segmented value={tab} options={tabs} onChange={setTab} />
-        )
-      }
-    >
-      <TopList
-        rows={metrics[tab] ?? []}
-        renderIcon={active.icon}
-        renderLabel={active.rowLabel}
-        renderMeta={(row, share) =>
-          `${formatNumber(row.y)} ${unit} · ${Math.round(share)} %`
-        }
-      />
-    </SectionCard>
-  )
-}
+type StatsResponse = Stats & { comparison: Stats }
 
 function WebsiteDashboard() {
-  const { overview, metrics } = Route.useLoaderData()
-  const { websiteId } = Route.useParams()
-  const { range = DEFAULT_RANGE } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
+  const websiteId = useWebsiteId()
+  const { query, range, custom } = useWebsiteQuery()
   const [mode, setMode] = useState<ChartMode>("both")
 
-  const { stats, series, active, unit } = overview
-  const prev = stats.comparison
-  const bounce = stats.visits
-    ? (Math.min(stats.visits, stats.bounces) / stats.visits) * 100
-    : 0
-  const prevBounce = prev.visits
-    ? (Math.min(prev.visits, prev.bounces) / prev.visits) * 100
-    : 0
-  const duration = stats.visits ? stats.totaltime / stats.visits : 0
-  const prevDuration = prev.visits ? prev.totaltime / prev.visits : 0
+  const stats = useApi<StatsResponse>(`/websites/${websiteId}/stats`, query)
+  const series = useApi<{ pageviews: Point[]; sessions: Point[] }>(
+    `/websites/${websiteId}/pageviews`,
+    query
+  )
+  const active = useApi<{ visitors: number }>(
+    `/websites/${websiteId}/active`,
+    undefined,
+    {
+      refetchInterval: 30_000,
+    }
+  )
+
+  const s = stats.data
+  const prev = s?.comparison
+  const online = active.data?.visitors ?? 0
+  const periodLabel = custom ? "the selected period" : RANGES[range].long
 
   return (
     <div className="flex flex-col gap-5">
+      <WebsiteToolbar />
+
       <SectionCard
         dither
         title="Overview"
         description="The key numbers for the period"
-        actions={
-          <RangeSwitch
-            value={range}
-            onChange={(r) => navigate({ search: { range: r } })}
-          />
-        }
         footer={
           <>
             <p className="flex min-w-0 items-center gap-2 text-muted-foreground">
               <span
                 className={cn(
                   "size-2 shrink-0 rounded-full",
-                  active > 0 ? "bg-success" : "bg-muted-foreground/40"
+                  online > 0 ? "bg-success" : "bg-muted-foreground/40"
                 )}
                 aria-hidden
               />
               <span className="truncate">
-                {active} {active === 1 ? "visitor" : "visitors"} online right
-                now · {formatNumber(stats.pageviews)} views in{" "}
-                {RANGES[range].long}
+                {online} {online === 1 ? "visitor" : "visitors"} online right
+                now
+                {s && ` · ${formatNumber(s.pageviews)} views in ${periodLabel}`}
               </span>
             </p>
             <Link
@@ -183,60 +97,72 @@ function WebsiteDashboard() {
           </>
         }
       >
-        <StatGrid
-          columns={[
-            {
-              key: "visitors",
-              icon: UsersIcon,
-              label: "Visitors",
-              value: formatNumber(stats.visitors),
-              current: stats.visitors,
-              previous: prev.visitors,
-              spark: series.sessions.map((p) => p.y),
-            },
-            {
-              key: "visits",
-              icon: MousePointerClickIcon,
-              label: "Visits",
-              value: formatNumber(stats.visits),
-              current: stats.visits,
-              previous: prev.visits,
-            },
-            {
-              key: "views",
-              icon: EyeIcon,
-              label: "Views",
-              value: formatNumber(stats.pageviews),
-              current: stats.pageviews,
-              previous: prev.pageviews,
-              spark: series.pageviews.map((p) => p.y),
-            },
-            {
-              key: "bounce",
-              icon: UndoIcon,
-              label: "Bounce rate",
-              value: formatPercent(bounce),
-              current: bounce,
-              previous: prevBounce,
-              invert: true,
-            },
-            {
-              key: "duration",
-              icon: ClockIcon,
-              label: "Visit duration",
-              value: formatDuration(duration),
-              current: duration,
-              previous: prevDuration,
-            },
-          ]}
-        />
+        {stats.error ? (
+          <p className="px-5 py-10 text-center text-sm text-destructive">
+            {stats.error.message}
+          </p>
+        ) : !s || !prev ? (
+          <div className="grid gap-4 px-5 py-4 sm:grid-cols-2 xl:grid-cols-5">
+            {Array.from({ length: 5 }, (_, i) => (
+              <Skeleton key={i} className="h-24" />
+            ))}
+          </div>
+        ) : (
+          <StatGrid
+            columns={[
+              {
+                key: "visitors",
+                icon: UsersIcon,
+                label: "Visitors",
+                value: formatNumber(s.visitors),
+                current: s.visitors,
+                previous: prev.visitors,
+                spark: series.data?.sessions.map((p) => p.y),
+              },
+              {
+                key: "visits",
+                icon: MousePointerClickIcon,
+                label: "Visits",
+                value: formatNumber(s.visits),
+                current: s.visits,
+                previous: prev.visits,
+              },
+              {
+                key: "views",
+                icon: EyeIcon,
+                label: "Views",
+                value: formatNumber(s.pageviews),
+                current: s.pageviews,
+                previous: prev.pageviews,
+                spark: series.data?.pageviews.map((p) => p.y),
+              },
+              {
+                key: "bounce",
+                icon: UndoIcon,
+                label: "Bounce rate",
+                value: formatPercent(bounceRate(s)),
+                current: bounceRate(s),
+                previous: bounceRate(prev),
+                invert: true,
+              },
+              {
+                key: "duration",
+                icon: ClockIcon,
+                label: "Visit duration",
+                value: formatDuration(visitDuration(s)),
+                current: visitDuration(s),
+                previous: visitDuration(prev),
+              },
+            ]}
+          />
+        )}
       </SectionCard>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
         <SectionCard
           dither
           title="Traffic trend"
-          description={`Visitors and views per ${unit}`}
+          description={`Visitors and views per ${query.unit}`}
           actions={
             <Segmented
               value={mode}
@@ -250,13 +176,21 @@ function WebsiteDashboard() {
           }
         >
           <div className="flex h-full flex-col px-5 pb-4">
-            <TrafficChart
-              className="h-auto min-h-72 flex-1"
-              pageviews={series.pageviews}
-              sessions={series.sessions}
-              unit={unit}
-              mode={mode}
-            />
+            {series.error ? (
+              <p className="py-10 text-center text-sm text-destructive">
+                {series.error.message}
+              </p>
+            ) : !series.data ? (
+              <Skeleton className="min-h-72 flex-1" />
+            ) : (
+              <TrafficChart
+                className="h-auto min-h-72 flex-1"
+                pageviews={series.data.pageviews}
+                sessions={series.data.sessions}
+                unit={query.unit}
+                mode={mode}
+              />
+            )}
             <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
               {mode !== "views" && (
                 <span className="flex items-center gap-1.5">
@@ -272,88 +206,36 @@ function WebsiteDashboard() {
           </div>
         </SectionCard>
 
-        <TabbedList
+        <MetricsCard
           title="Top pages"
           description="The most visited pages"
-          metrics={metrics}
-          tabs={[
-            { value: "path", label: "Path", icon: () => <FileTextIcon /> },
-            { value: "entry", label: "Entry", icon: () => <LogInIcon /> },
-            { value: "exit", label: "Exit", icon: () => <LogOutIcon /> },
-          ]}
+          tabs={PAGE_TABS}
         />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <TabbedList
+        <MetricsCard
           title="Sources"
           description="Where your visitors come from"
-          metrics={metrics}
-          tabs={[
-            {
-              value: "referrer",
-              label: "Referrers",
-              icon: () => <ShareIcon />,
-              rowLabel: (r) => r.x || "Direct / none",
-            },
-            {
-              value: "channel",
-              label: "Channels",
-              icon: () => <CompassIcon />,
-              rowLabel: (r) => (
-                <span className="capitalize">{r.x || "direct"}</span>
-              ),
-            },
-          ]}
+          tabs={SOURCE_TABS}
         />
-        <TabbedList
+        <MetricsCard
           title="Location"
           description="Countries and cities"
-          metrics={metrics}
-          tabs={[
-            {
-              value: "country",
-              label: "Countries",
-              icon: (r) => flag(r.x),
-              rowLabel: (r) => countryName(r.x),
-            },
-            { value: "city", label: "Cities", icon: () => <MapPinIcon /> },
-          ]}
+          tabs={LOCATION_TABS}
         />
-        <TabbedList
+        <MetricsCard
           title="Environment"
           description="Browsers, systems and devices"
-          metrics={metrics}
-          tabs={[
-            {
-              value: "browser",
-              label: "Browser",
-              icon: () => <CompassIcon />,
-              rowLabel: (r) => <span className="capitalize">{r.x}</span>,
-            },
-            { value: "os", label: "OS", icon: () => <MonitorIcon /> },
-            {
-              value: "device",
-              label: "Device",
-              icon: (r) => DEVICE_ICONS[r.x] ?? <MonitorIcon />,
-              rowLabel: (r) => <span className="capitalize">{r.x}</span>,
-            },
-          ]}
+          tabs={ENV_TABS}
         />
       </div>
 
-      <TabbedList
+      <MetricsCard
         title="Events"
         description="Custom events tracked on this website"
-        metrics={metrics}
+        tabs={EVENT_TABS}
         unit="events"
-        tabs={[
-          {
-            value: "event",
-            label: "Events",
-            icon: () => <MousePointerClickIcon />,
-          },
-        ]}
       />
     </div>
   )

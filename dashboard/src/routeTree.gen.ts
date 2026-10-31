@@ -12,10 +12,54 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppAdminRouteRouteImport } from './routes/_app/admin/route'
+import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
+import { Route as ShareSlugRouteImport } from './routes/share/$slug'
+import { Route as AppAdminIndexRouteImport } from './routes/_app/admin/index'
+import { Route as AppAdminSecurityRouteImport } from './routes/_app/admin/security'
+import { Route as AppBoardsIndexRouteImport } from './routes/_app/boards/index'
+import { Route as AppBoardsBoardIdRouteImport } from './routes/_app/boards/$boardId'
+import { Route as AppLinksIndexRouteImport } from './routes/_app/links/index'
+import { Route as AppLinksLinkIdRouteImport } from './routes/_app/links/$linkId'
+import { Route as AppPixelsIndexRouteImport } from './routes/_app/pixels/index'
+import { Route as AppPixelsPixelIdRouteImport } from './routes/_app/pixels/$pixelId'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettingsApiKeysRouteImport } from './routes/_app/settings/api-keys'
+import { Route as AppSettingsPreferencesRouteImport } from './routes/_app/settings/preferences'
+import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
+import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
+import { Route as AppSettingsWebsitesRouteImport } from './routes/_app/settings/websites'
 import { Route as AppWebsitesIndexRouteImport } from './routes/_app/websites/index'
 import { Route as AppWebsitesWebsiteIdRouteRouteImport } from './routes/_app/websites/$websiteId/route'
+import { Route as AppAdminTeamsIndexRouteImport } from './routes/_app/admin/teams/index'
+import { Route as AppAdminTeamsTeamIdRouteImport } from './routes/_app/admin/teams/$teamId'
+import { Route as AppAdminUsersIndexRouteImport } from './routes/_app/admin/users/index'
+import { Route as AppAdminUsersUserIdRouteImport } from './routes/_app/admin/users/$userId'
+import { Route as AppAdminWebsitesIndexRouteImport } from './routes/_app/admin/websites/index'
+import { Route as AppAdminWebsitesWebsiteIdRouteImport } from './routes/_app/admin/websites/$websiteId'
+import { Route as AppSettingsTeamsIndexRouteImport } from './routes/_app/settings/teams/index'
+import { Route as AppSettingsTeamsTeamIdRouteImport } from './routes/_app/settings/teams/$teamId'
 import { Route as AppWebsitesWebsiteIdIndexRouteImport } from './routes/_app/websites/$websiteId/index'
+import { Route as AppWebsitesWebsiteIdAttributionRouteImport } from './routes/_app/websites/$websiteId/attribution'
+import { Route as AppWebsitesWebsiteIdBreakdownRouteImport } from './routes/_app/websites/$websiteId/breakdown'
+import { Route as AppWebsitesWebsiteIdCohortsRouteImport } from './routes/_app/websites/$websiteId/cohorts'
+import { Route as AppWebsitesWebsiteIdCompareRouteImport } from './routes/_app/websites/$websiteId/compare'
+import { Route as AppWebsitesWebsiteIdEventsRouteImport } from './routes/_app/websites/$websiteId/events'
+import { Route as AppWebsitesWebsiteIdFunnelsRouteImport } from './routes/_app/websites/$websiteId/funnels'
+import { Route as AppWebsitesWebsiteIdGoalsRouteImport } from './routes/_app/websites/$websiteId/goals'
+import { Route as AppWebsitesWebsiteIdHeatmapsRouteImport } from './routes/_app/websites/$websiteId/heatmaps'
+import { Route as AppWebsitesWebsiteIdJourneysRouteImport } from './routes/_app/websites/$websiteId/journeys'
+import { Route as AppWebsitesWebsiteIdPerformanceRouteImport } from './routes/_app/websites/$websiteId/performance'
 import { Route as AppWebsitesWebsiteIdRealtimeRouteImport } from './routes/_app/websites/$websiteId/realtime'
+import { Route as AppWebsitesWebsiteIdRetentionRouteImport } from './routes/_app/websites/$websiteId/retention'
+import { Route as AppWebsitesWebsiteIdRevenueRouteImport } from './routes/_app/websites/$websiteId/revenue'
+import { Route as AppWebsitesWebsiteIdSegmentsRouteImport } from './routes/_app/websites/$websiteId/segments'
+import { Route as AppWebsitesWebsiteIdSettingsRouteImport } from './routes/_app/websites/$websiteId/settings'
+import { Route as AppWebsitesWebsiteIdUtmRouteImport } from './routes/_app/websites/$websiteId/utm'
+import { Route as AppWebsitesWebsiteIdReplaysIndexRouteImport } from './routes/_app/websites/$websiteId/replays/index'
+import { Route as AppWebsitesWebsiteIdReplaysReplayIdRouteImport } from './routes/_app/websites/$websiteId/replays/$replayId'
+import { Route as AppWebsitesWebsiteIdSessionsIndexRouteImport } from './routes/_app/websites/$websiteId/sessions/index'
+import { Route as AppWebsitesWebsiteIdSessionsSessionIdRouteImport } from './routes/_app/websites/$websiteId/sessions/$sessionId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -31,6 +75,91 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const ShareSlugRoute = ShareSlugRouteImport.update({
+  id: '/share/$slug',
+  path: '/share/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminSecurityRoute = AppAdminSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppBoardsIndexRoute = AppBoardsIndexRouteImport.update({
+  id: '/boards/',
+  path: '/boards/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBoardsBoardIdRoute = AppBoardsBoardIdRouteImport.update({
+  id: '/boards/$boardId',
+  path: '/boards/$boardId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLinksIndexRoute = AppLinksIndexRouteImport.update({
+  id: '/links/',
+  path: '/links/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLinksLinkIdRoute = AppLinksLinkIdRouteImport.update({
+  id: '/links/$linkId',
+  path: '/links/$linkId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPixelsIndexRoute = AppPixelsIndexRouteImport.update({
+  id: '/pixels/',
+  path: '/pixels/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPixelsPixelIdRoute = AppPixelsPixelIdRouteImport.update({
+  id: '/pixels/$pixelId',
+  path: '/pixels/$pixelId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsApiKeysRoute = AppSettingsApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsPreferencesRoute = AppSettingsPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsWebsitesRoute = AppSettingsWebsitesRouteImport.update({
+  id: '/websites',
+  path: '/websites',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 const AppWebsitesIndexRoute = AppWebsitesIndexRouteImport.update({
   id: '/websites/',
   path: '/websites/',
@@ -42,10 +171,111 @@ const AppWebsitesWebsiteIdRouteRoute =
     path: '/websites/$websiteId',
     getParentRoute: () => AppRoute,
   } as any)
+const AppAdminTeamsIndexRoute = AppAdminTeamsIndexRouteImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminTeamsTeamIdRoute = AppAdminTeamsTeamIdRouteImport.update({
+  id: '/teams/$teamId',
+  path: '/teams/$teamId',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminUsersIndexRoute = AppAdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminUsersUserIdRoute = AppAdminUsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminWebsitesIndexRoute = AppAdminWebsitesIndexRouteImport.update({
+  id: '/websites/',
+  path: '/websites/',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminWebsitesWebsiteIdRoute =
+  AppAdminWebsitesWebsiteIdRouteImport.update({
+    id: '/websites/$websiteId',
+    path: '/websites/$websiteId',
+    getParentRoute: () => AppAdminRouteRoute,
+  } as any)
+const AppSettingsTeamsIndexRoute = AppSettingsTeamsIndexRouteImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsTeamsTeamIdRoute = AppSettingsTeamsTeamIdRouteImport.update({
+  id: '/teams/$teamId',
+  path: '/teams/$teamId',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 const AppWebsitesWebsiteIdIndexRoute =
   AppWebsitesWebsiteIdIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdAttributionRoute =
+  AppWebsitesWebsiteIdAttributionRouteImport.update({
+    id: '/attribution',
+    path: '/attribution',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdBreakdownRoute =
+  AppWebsitesWebsiteIdBreakdownRouteImport.update({
+    id: '/breakdown',
+    path: '/breakdown',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdCohortsRoute =
+  AppWebsitesWebsiteIdCohortsRouteImport.update({
+    id: '/cohorts',
+    path: '/cohorts',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdCompareRoute =
+  AppWebsitesWebsiteIdCompareRouteImport.update({
+    id: '/compare',
+    path: '/compare',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdEventsRoute =
+  AppWebsitesWebsiteIdEventsRouteImport.update({
+    id: '/events',
+    path: '/events',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdFunnelsRoute =
+  AppWebsitesWebsiteIdFunnelsRouteImport.update({
+    id: '/funnels',
+    path: '/funnels',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdGoalsRoute =
+  AppWebsitesWebsiteIdGoalsRouteImport.update({
+    id: '/goals',
+    path: '/goals',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdHeatmapsRoute =
+  AppWebsitesWebsiteIdHeatmapsRouteImport.update({
+    id: '/heatmaps',
+    path: '/heatmaps',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdJourneysRoute =
+  AppWebsitesWebsiteIdJourneysRouteImport.update({
+    id: '/journeys',
+    path: '/journeys',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdPerformanceRoute =
+  AppWebsitesWebsiteIdPerformanceRouteImport.update({
+    id: '/performance',
+    path: '/performance',
     getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
   } as any)
 const AppWebsitesWebsiteIdRealtimeRoute =
@@ -54,62 +284,376 @@ const AppWebsitesWebsiteIdRealtimeRoute =
     path: '/realtime',
     getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
   } as any)
+const AppWebsitesWebsiteIdRetentionRoute =
+  AppWebsitesWebsiteIdRetentionRouteImport.update({
+    id: '/retention',
+    path: '/retention',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdRevenueRoute =
+  AppWebsitesWebsiteIdRevenueRouteImport.update({
+    id: '/revenue',
+    path: '/revenue',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdSegmentsRoute =
+  AppWebsitesWebsiteIdSegmentsRouteImport.update({
+    id: '/segments',
+    path: '/segments',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdSettingsRoute =
+  AppWebsitesWebsiteIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdUtmRoute = AppWebsitesWebsiteIdUtmRouteImport.update({
+  id: '/utm',
+  path: '/utm',
+  getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+} as any)
+const AppWebsitesWebsiteIdReplaysIndexRoute =
+  AppWebsitesWebsiteIdReplaysIndexRouteImport.update({
+    id: '/replays/',
+    path: '/replays/',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdReplaysReplayIdRoute =
+  AppWebsitesWebsiteIdReplaysReplayIdRouteImport.update({
+    id: '/replays/$replayId',
+    path: '/replays/$replayId',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdSessionsIndexRoute =
+  AppWebsitesWebsiteIdSessionsIndexRouteImport.update({
+    id: '/sessions/',
+    path: '/sessions/',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
+const AppWebsitesWebsiteIdSessionsSessionIdRoute =
+  AppWebsitesWebsiteIdSessionsSessionIdRouteImport.update({
+    id: '/sessions/$sessionId',
+    path: '/sessions/$sessionId',
+    getParentRoute: () => AppWebsitesWebsiteIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRouteRouteWithChildren
+  '/settings': typeof AppSettingsRouteRouteWithChildren
+  '/share/$slug': typeof ShareSlugRoute
   '/websites/$websiteId': typeof AppWebsitesWebsiteIdRouteRouteWithChildren
+  '/admin/security': typeof AppAdminSecurityRoute
+  '/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/links/$linkId': typeof AppLinksLinkIdRoute
+  '/pixels/$pixelId': typeof AppPixelsPixelIdRoute
+  '/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/settings/preferences': typeof AppSettingsPreferencesRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/websites': typeof AppSettingsWebsitesRoute
+  '/admin/': typeof AppAdminIndexRoute
+  '/boards/': typeof AppBoardsIndexRoute
+  '/links/': typeof AppLinksIndexRoute
+  '/pixels/': typeof AppPixelsIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
   '/websites/': typeof AppWebsitesIndexRoute
+  '/admin/teams/$teamId': typeof AppAdminTeamsTeamIdRoute
+  '/admin/users/$userId': typeof AppAdminUsersUserIdRoute
+  '/admin/websites/$websiteId': typeof AppAdminWebsitesWebsiteIdRoute
+  '/settings/teams/$teamId': typeof AppSettingsTeamsTeamIdRoute
+  '/websites/$websiteId/attribution': typeof AppWebsitesWebsiteIdAttributionRoute
+  '/websites/$websiteId/breakdown': typeof AppWebsitesWebsiteIdBreakdownRoute
+  '/websites/$websiteId/cohorts': typeof AppWebsitesWebsiteIdCohortsRoute
+  '/websites/$websiteId/compare': typeof AppWebsitesWebsiteIdCompareRoute
+  '/websites/$websiteId/events': typeof AppWebsitesWebsiteIdEventsRoute
+  '/websites/$websiteId/funnels': typeof AppWebsitesWebsiteIdFunnelsRoute
+  '/websites/$websiteId/goals': typeof AppWebsitesWebsiteIdGoalsRoute
+  '/websites/$websiteId/heatmaps': typeof AppWebsitesWebsiteIdHeatmapsRoute
+  '/websites/$websiteId/journeys': typeof AppWebsitesWebsiteIdJourneysRoute
+  '/websites/$websiteId/performance': typeof AppWebsitesWebsiteIdPerformanceRoute
   '/websites/$websiteId/realtime': typeof AppWebsitesWebsiteIdRealtimeRoute
+  '/websites/$websiteId/retention': typeof AppWebsitesWebsiteIdRetentionRoute
+  '/websites/$websiteId/revenue': typeof AppWebsitesWebsiteIdRevenueRoute
+  '/websites/$websiteId/segments': typeof AppWebsitesWebsiteIdSegmentsRoute
+  '/websites/$websiteId/settings': typeof AppWebsitesWebsiteIdSettingsRoute
+  '/websites/$websiteId/utm': typeof AppWebsitesWebsiteIdUtmRoute
+  '/admin/teams/': typeof AppAdminTeamsIndexRoute
+  '/admin/users/': typeof AppAdminUsersIndexRoute
+  '/admin/websites/': typeof AppAdminWebsitesIndexRoute
+  '/settings/teams/': typeof AppSettingsTeamsIndexRoute
   '/websites/$websiteId/': typeof AppWebsitesWebsiteIdIndexRoute
+  '/websites/$websiteId/replays/$replayId': typeof AppWebsitesWebsiteIdReplaysReplayIdRoute
+  '/websites/$websiteId/sessions/$sessionId': typeof AppWebsitesWebsiteIdSessionsSessionIdRoute
+  '/websites/$websiteId/replays/': typeof AppWebsitesWebsiteIdReplaysIndexRoute
+  '/websites/$websiteId/sessions/': typeof AppWebsitesWebsiteIdSessionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/share/$slug': typeof ShareSlugRoute
   '/': typeof AppIndexRoute
+  '/admin/security': typeof AppAdminSecurityRoute
+  '/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/links/$linkId': typeof AppLinksLinkIdRoute
+  '/pixels/$pixelId': typeof AppPixelsPixelIdRoute
+  '/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/settings/preferences': typeof AppSettingsPreferencesRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/websites': typeof AppSettingsWebsitesRoute
+  '/admin': typeof AppAdminIndexRoute
+  '/boards': typeof AppBoardsIndexRoute
+  '/links': typeof AppLinksIndexRoute
+  '/pixels': typeof AppPixelsIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
   '/websites': typeof AppWebsitesIndexRoute
+  '/admin/teams/$teamId': typeof AppAdminTeamsTeamIdRoute
+  '/admin/users/$userId': typeof AppAdminUsersUserIdRoute
+  '/admin/websites/$websiteId': typeof AppAdminWebsitesWebsiteIdRoute
+  '/settings/teams/$teamId': typeof AppSettingsTeamsTeamIdRoute
+  '/websites/$websiteId/attribution': typeof AppWebsitesWebsiteIdAttributionRoute
+  '/websites/$websiteId/breakdown': typeof AppWebsitesWebsiteIdBreakdownRoute
+  '/websites/$websiteId/cohorts': typeof AppWebsitesWebsiteIdCohortsRoute
+  '/websites/$websiteId/compare': typeof AppWebsitesWebsiteIdCompareRoute
+  '/websites/$websiteId/events': typeof AppWebsitesWebsiteIdEventsRoute
+  '/websites/$websiteId/funnels': typeof AppWebsitesWebsiteIdFunnelsRoute
+  '/websites/$websiteId/goals': typeof AppWebsitesWebsiteIdGoalsRoute
+  '/websites/$websiteId/heatmaps': typeof AppWebsitesWebsiteIdHeatmapsRoute
+  '/websites/$websiteId/journeys': typeof AppWebsitesWebsiteIdJourneysRoute
+  '/websites/$websiteId/performance': typeof AppWebsitesWebsiteIdPerformanceRoute
   '/websites/$websiteId/realtime': typeof AppWebsitesWebsiteIdRealtimeRoute
+  '/websites/$websiteId/retention': typeof AppWebsitesWebsiteIdRetentionRoute
+  '/websites/$websiteId/revenue': typeof AppWebsitesWebsiteIdRevenueRoute
+  '/websites/$websiteId/segments': typeof AppWebsitesWebsiteIdSegmentsRoute
+  '/websites/$websiteId/settings': typeof AppWebsitesWebsiteIdSettingsRoute
+  '/websites/$websiteId/utm': typeof AppWebsitesWebsiteIdUtmRoute
+  '/admin/teams': typeof AppAdminTeamsIndexRoute
+  '/admin/users': typeof AppAdminUsersIndexRoute
+  '/admin/websites': typeof AppAdminWebsitesIndexRoute
+  '/settings/teams': typeof AppSettingsTeamsIndexRoute
   '/websites/$websiteId': typeof AppWebsitesWebsiteIdIndexRoute
+  '/websites/$websiteId/replays/$replayId': typeof AppWebsitesWebsiteIdReplaysReplayIdRoute
+  '/websites/$websiteId/sessions/$sessionId': typeof AppWebsitesWebsiteIdSessionsSessionIdRoute
+  '/websites/$websiteId/replays': typeof AppWebsitesWebsiteIdReplaysIndexRoute
+  '/websites/$websiteId/sessions': typeof AppWebsitesWebsiteIdSessionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/admin': typeof AppAdminRouteRouteWithChildren
+  '/_app/settings': typeof AppSettingsRouteRouteWithChildren
+  '/share/$slug': typeof ShareSlugRoute
   '/_app/': typeof AppIndexRoute
   '/_app/websites/$websiteId': typeof AppWebsitesWebsiteIdRouteRouteWithChildren
+  '/_app/admin/security': typeof AppAdminSecurityRoute
+  '/_app/boards/$boardId': typeof AppBoardsBoardIdRoute
+  '/_app/links/$linkId': typeof AppLinksLinkIdRoute
+  '/_app/pixels/$pixelId': typeof AppPixelsPixelIdRoute
+  '/_app/settings/api-keys': typeof AppSettingsApiKeysRoute
+  '/_app/settings/preferences': typeof AppSettingsPreferencesRoute
+  '/_app/settings/profile': typeof AppSettingsProfileRoute
+  '/_app/settings/security': typeof AppSettingsSecurityRoute
+  '/_app/settings/websites': typeof AppSettingsWebsitesRoute
+  '/_app/admin/': typeof AppAdminIndexRoute
+  '/_app/boards/': typeof AppBoardsIndexRoute
+  '/_app/links/': typeof AppLinksIndexRoute
+  '/_app/pixels/': typeof AppPixelsIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/websites/': typeof AppWebsitesIndexRoute
+  '/_app/admin/teams/$teamId': typeof AppAdminTeamsTeamIdRoute
+  '/_app/admin/users/$userId': typeof AppAdminUsersUserIdRoute
+  '/_app/admin/websites/$websiteId': typeof AppAdminWebsitesWebsiteIdRoute
+  '/_app/settings/teams/$teamId': typeof AppSettingsTeamsTeamIdRoute
+  '/_app/websites/$websiteId/attribution': typeof AppWebsitesWebsiteIdAttributionRoute
+  '/_app/websites/$websiteId/breakdown': typeof AppWebsitesWebsiteIdBreakdownRoute
+  '/_app/websites/$websiteId/cohorts': typeof AppWebsitesWebsiteIdCohortsRoute
+  '/_app/websites/$websiteId/compare': typeof AppWebsitesWebsiteIdCompareRoute
+  '/_app/websites/$websiteId/events': typeof AppWebsitesWebsiteIdEventsRoute
+  '/_app/websites/$websiteId/funnels': typeof AppWebsitesWebsiteIdFunnelsRoute
+  '/_app/websites/$websiteId/goals': typeof AppWebsitesWebsiteIdGoalsRoute
+  '/_app/websites/$websiteId/heatmaps': typeof AppWebsitesWebsiteIdHeatmapsRoute
+  '/_app/websites/$websiteId/journeys': typeof AppWebsitesWebsiteIdJourneysRoute
+  '/_app/websites/$websiteId/performance': typeof AppWebsitesWebsiteIdPerformanceRoute
   '/_app/websites/$websiteId/realtime': typeof AppWebsitesWebsiteIdRealtimeRoute
+  '/_app/websites/$websiteId/retention': typeof AppWebsitesWebsiteIdRetentionRoute
+  '/_app/websites/$websiteId/revenue': typeof AppWebsitesWebsiteIdRevenueRoute
+  '/_app/websites/$websiteId/segments': typeof AppWebsitesWebsiteIdSegmentsRoute
+  '/_app/websites/$websiteId/settings': typeof AppWebsitesWebsiteIdSettingsRoute
+  '/_app/websites/$websiteId/utm': typeof AppWebsitesWebsiteIdUtmRoute
+  '/_app/admin/teams/': typeof AppAdminTeamsIndexRoute
+  '/_app/admin/users/': typeof AppAdminUsersIndexRoute
+  '/_app/admin/websites/': typeof AppAdminWebsitesIndexRoute
+  '/_app/settings/teams/': typeof AppSettingsTeamsIndexRoute
   '/_app/websites/$websiteId/': typeof AppWebsitesWebsiteIdIndexRoute
+  '/_app/websites/$websiteId/replays/$replayId': typeof AppWebsitesWebsiteIdReplaysReplayIdRoute
+  '/_app/websites/$websiteId/sessions/$sessionId': typeof AppWebsitesWebsiteIdSessionsSessionIdRoute
+  '/_app/websites/$websiteId/replays/': typeof AppWebsitesWebsiteIdReplaysIndexRoute
+  '/_app/websites/$websiteId/sessions/': typeof AppWebsitesWebsiteIdSessionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
+    | '/admin'
+    | '/settings'
+    | '/share/$slug'
     | '/websites/$websiteId'
+    | '/admin/security'
+    | '/boards/$boardId'
+    | '/links/$linkId'
+    | '/pixels/$pixelId'
+    | '/settings/api-keys'
+    | '/settings/preferences'
+    | '/settings/profile'
+    | '/settings/security'
+    | '/settings/websites'
+    | '/admin/'
+    | '/boards/'
+    | '/links/'
+    | '/pixels/'
+    | '/settings/'
     | '/websites/'
+    | '/admin/teams/$teamId'
+    | '/admin/users/$userId'
+    | '/admin/websites/$websiteId'
+    | '/settings/teams/$teamId'
+    | '/websites/$websiteId/attribution'
+    | '/websites/$websiteId/breakdown'
+    | '/websites/$websiteId/cohorts'
+    | '/websites/$websiteId/compare'
+    | '/websites/$websiteId/events'
+    | '/websites/$websiteId/funnels'
+    | '/websites/$websiteId/goals'
+    | '/websites/$websiteId/heatmaps'
+    | '/websites/$websiteId/journeys'
+    | '/websites/$websiteId/performance'
     | '/websites/$websiteId/realtime'
+    | '/websites/$websiteId/retention'
+    | '/websites/$websiteId/revenue'
+    | '/websites/$websiteId/segments'
+    | '/websites/$websiteId/settings'
+    | '/websites/$websiteId/utm'
+    | '/admin/teams/'
+    | '/admin/users/'
+    | '/admin/websites/'
+    | '/settings/teams/'
     | '/websites/$websiteId/'
+    | '/websites/$websiteId/replays/$replayId'
+    | '/websites/$websiteId/sessions/$sessionId'
+    | '/websites/$websiteId/replays/'
+    | '/websites/$websiteId/sessions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/share/$slug'
     | '/'
+    | '/admin/security'
+    | '/boards/$boardId'
+    | '/links/$linkId'
+    | '/pixels/$pixelId'
+    | '/settings/api-keys'
+    | '/settings/preferences'
+    | '/settings/profile'
+    | '/settings/security'
+    | '/settings/websites'
+    | '/admin'
+    | '/boards'
+    | '/links'
+    | '/pixels'
+    | '/settings'
     | '/websites'
+    | '/admin/teams/$teamId'
+    | '/admin/users/$userId'
+    | '/admin/websites/$websiteId'
+    | '/settings/teams/$teamId'
+    | '/websites/$websiteId/attribution'
+    | '/websites/$websiteId/breakdown'
+    | '/websites/$websiteId/cohorts'
+    | '/websites/$websiteId/compare'
+    | '/websites/$websiteId/events'
+    | '/websites/$websiteId/funnels'
+    | '/websites/$websiteId/goals'
+    | '/websites/$websiteId/heatmaps'
+    | '/websites/$websiteId/journeys'
+    | '/websites/$websiteId/performance'
     | '/websites/$websiteId/realtime'
+    | '/websites/$websiteId/retention'
+    | '/websites/$websiteId/revenue'
+    | '/websites/$websiteId/segments'
+    | '/websites/$websiteId/settings'
+    | '/websites/$websiteId/utm'
+    | '/admin/teams'
+    | '/admin/users'
+    | '/admin/websites'
+    | '/settings/teams'
     | '/websites/$websiteId'
+    | '/websites/$websiteId/replays/$replayId'
+    | '/websites/$websiteId/sessions/$sessionId'
+    | '/websites/$websiteId/replays'
+    | '/websites/$websiteId/sessions'
   id:
     | '__root__'
     | '/_app'
     | '/login'
+    | '/_app/admin'
+    | '/_app/settings'
+    | '/share/$slug'
     | '/_app/'
     | '/_app/websites/$websiteId'
+    | '/_app/admin/security'
+    | '/_app/boards/$boardId'
+    | '/_app/links/$linkId'
+    | '/_app/pixels/$pixelId'
+    | '/_app/settings/api-keys'
+    | '/_app/settings/preferences'
+    | '/_app/settings/profile'
+    | '/_app/settings/security'
+    | '/_app/settings/websites'
+    | '/_app/admin/'
+    | '/_app/boards/'
+    | '/_app/links/'
+    | '/_app/pixels/'
+    | '/_app/settings/'
     | '/_app/websites/'
+    | '/_app/admin/teams/$teamId'
+    | '/_app/admin/users/$userId'
+    | '/_app/admin/websites/$websiteId'
+    | '/_app/settings/teams/$teamId'
+    | '/_app/websites/$websiteId/attribution'
+    | '/_app/websites/$websiteId/breakdown'
+    | '/_app/websites/$websiteId/cohorts'
+    | '/_app/websites/$websiteId/compare'
+    | '/_app/websites/$websiteId/events'
+    | '/_app/websites/$websiteId/funnels'
+    | '/_app/websites/$websiteId/goals'
+    | '/_app/websites/$websiteId/heatmaps'
+    | '/_app/websites/$websiteId/journeys'
+    | '/_app/websites/$websiteId/performance'
     | '/_app/websites/$websiteId/realtime'
+    | '/_app/websites/$websiteId/retention'
+    | '/_app/websites/$websiteId/revenue'
+    | '/_app/websites/$websiteId/segments'
+    | '/_app/websites/$websiteId/settings'
+    | '/_app/websites/$websiteId/utm'
+    | '/_app/admin/teams/'
+    | '/_app/admin/users/'
+    | '/_app/admin/websites/'
+    | '/_app/settings/teams/'
     | '/_app/websites/$websiteId/'
+    | '/_app/websites/$websiteId/replays/$replayId'
+    | '/_app/websites/$websiteId/sessions/$sessionId'
+    | '/_app/websites/$websiteId/replays/'
+    | '/_app/websites/$websiteId/sessions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ShareSlugRoute: typeof ShareSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -135,6 +679,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/share/$slug': {
+      id: '/share/$slug'
+      path: '/share/$slug'
+      fullPath: '/share/$slug'
+      preLoaderRoute: typeof ShareSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/admin/': {
+      id: '/_app/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/security': {
+      id: '/_app/admin/security'
+      path: '/security'
+      fullPath: '/admin/security'
+      preLoaderRoute: typeof AppAdminSecurityRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/boards/': {
+      id: '/_app/boards/'
+      path: '/boards'
+      fullPath: '/boards/'
+      preLoaderRoute: typeof AppBoardsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/boards/$boardId': {
+      id: '/_app/boards/$boardId'
+      path: '/boards/$boardId'
+      fullPath: '/boards/$boardId'
+      preLoaderRoute: typeof AppBoardsBoardIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/links/': {
+      id: '/_app/links/'
+      path: '/links'
+      fullPath: '/links/'
+      preLoaderRoute: typeof AppLinksIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/links/$linkId': {
+      id: '/_app/links/$linkId'
+      path: '/links/$linkId'
+      fullPath: '/links/$linkId'
+      preLoaderRoute: typeof AppLinksLinkIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/pixels/': {
+      id: '/_app/pixels/'
+      path: '/pixels'
+      fullPath: '/pixels/'
+      preLoaderRoute: typeof AppPixelsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/pixels/$pixelId': {
+      id: '/_app/pixels/$pixelId'
+      path: '/pixels/$pixelId'
+      fullPath: '/pixels/$pixelId'
+      preLoaderRoute: typeof AppPixelsPixelIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/api-keys': {
+      id: '/_app/settings/api-keys'
+      path: '/api-keys'
+      fullPath: '/settings/api-keys'
+      preLoaderRoute: typeof AppSettingsApiKeysRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/preferences': {
+      id: '/_app/settings/preferences'
+      path: '/preferences'
+      fullPath: '/settings/preferences'
+      preLoaderRoute: typeof AppSettingsPreferencesRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/profile': {
+      id: '/_app/settings/profile'
+      path: '/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AppSettingsProfileRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/security': {
+      id: '/_app/settings/security'
+      path: '/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof AppSettingsSecurityRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/websites': {
+      id: '/_app/settings/websites'
+      path: '/websites'
+      fullPath: '/settings/websites'
+      preLoaderRoute: typeof AppSettingsWebsitesRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/websites/': {
       id: '/_app/websites/'
       path: '/websites'
@@ -149,11 +812,137 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWebsitesWebsiteIdRouteRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/teams/': {
+      id: '/_app/admin/teams/'
+      path: '/teams'
+      fullPath: '/admin/teams/'
+      preLoaderRoute: typeof AppAdminTeamsIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/teams/$teamId': {
+      id: '/_app/admin/teams/$teamId'
+      path: '/teams/$teamId'
+      fullPath: '/admin/teams/$teamId'
+      preLoaderRoute: typeof AppAdminTeamsTeamIdRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/users/': {
+      id: '/_app/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AppAdminUsersIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/users/$userId': {
+      id: '/_app/admin/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AppAdminUsersUserIdRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/websites/': {
+      id: '/_app/admin/websites/'
+      path: '/websites'
+      fullPath: '/admin/websites/'
+      preLoaderRoute: typeof AppAdminWebsitesIndexRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/admin/websites/$websiteId': {
+      id: '/_app/admin/websites/$websiteId'
+      path: '/websites/$websiteId'
+      fullPath: '/admin/websites/$websiteId'
+      preLoaderRoute: typeof AppAdminWebsitesWebsiteIdRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
+    '/_app/settings/teams/': {
+      id: '/_app/settings/teams/'
+      path: '/teams'
+      fullPath: '/settings/teams/'
+      preLoaderRoute: typeof AppSettingsTeamsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/teams/$teamId': {
+      id: '/_app/settings/teams/$teamId'
+      path: '/teams/$teamId'
+      fullPath: '/settings/teams/$teamId'
+      preLoaderRoute: typeof AppSettingsTeamsTeamIdRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/websites/$websiteId/': {
       id: '/_app/websites/$websiteId/'
       path: '/'
       fullPath: '/websites/$websiteId/'
       preLoaderRoute: typeof AppWebsitesWebsiteIdIndexRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/attribution': {
+      id: '/_app/websites/$websiteId/attribution'
+      path: '/attribution'
+      fullPath: '/websites/$websiteId/attribution'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdAttributionRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/breakdown': {
+      id: '/_app/websites/$websiteId/breakdown'
+      path: '/breakdown'
+      fullPath: '/websites/$websiteId/breakdown'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdBreakdownRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/cohorts': {
+      id: '/_app/websites/$websiteId/cohorts'
+      path: '/cohorts'
+      fullPath: '/websites/$websiteId/cohorts'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdCohortsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/compare': {
+      id: '/_app/websites/$websiteId/compare'
+      path: '/compare'
+      fullPath: '/websites/$websiteId/compare'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdCompareRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/events': {
+      id: '/_app/websites/$websiteId/events'
+      path: '/events'
+      fullPath: '/websites/$websiteId/events'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdEventsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/funnels': {
+      id: '/_app/websites/$websiteId/funnels'
+      path: '/funnels'
+      fullPath: '/websites/$websiteId/funnels'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdFunnelsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/goals': {
+      id: '/_app/websites/$websiteId/goals'
+      path: '/goals'
+      fullPath: '/websites/$websiteId/goals'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdGoalsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/heatmaps': {
+      id: '/_app/websites/$websiteId/heatmaps'
+      path: '/heatmaps'
+      fullPath: '/websites/$websiteId/heatmaps'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdHeatmapsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/journeys': {
+      id: '/_app/websites/$websiteId/journeys'
+      path: '/journeys'
+      fullPath: '/websites/$websiteId/journeys'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdJourneysRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/performance': {
+      id: '/_app/websites/$websiteId/performance'
+      path: '/performance'
+      fullPath: '/websites/$websiteId/performance'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdPerformanceRouteImport
       parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
     }
     '/_app/websites/$websiteId/realtime': {
@@ -163,18 +952,174 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWebsitesWebsiteIdRealtimeRouteImport
       parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
     }
+    '/_app/websites/$websiteId/retention': {
+      id: '/_app/websites/$websiteId/retention'
+      path: '/retention'
+      fullPath: '/websites/$websiteId/retention'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdRetentionRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/revenue': {
+      id: '/_app/websites/$websiteId/revenue'
+      path: '/revenue'
+      fullPath: '/websites/$websiteId/revenue'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdRevenueRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/segments': {
+      id: '/_app/websites/$websiteId/segments'
+      path: '/segments'
+      fullPath: '/websites/$websiteId/segments'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdSegmentsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/settings': {
+      id: '/_app/websites/$websiteId/settings'
+      path: '/settings'
+      fullPath: '/websites/$websiteId/settings'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdSettingsRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/utm': {
+      id: '/_app/websites/$websiteId/utm'
+      path: '/utm'
+      fullPath: '/websites/$websiteId/utm'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdUtmRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/replays/': {
+      id: '/_app/websites/$websiteId/replays/'
+      path: '/replays'
+      fullPath: '/websites/$websiteId/replays/'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdReplaysIndexRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/replays/$replayId': {
+      id: '/_app/websites/$websiteId/replays/$replayId'
+      path: '/replays/$replayId'
+      fullPath: '/websites/$websiteId/replays/$replayId'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdReplaysReplayIdRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/sessions/': {
+      id: '/_app/websites/$websiteId/sessions/'
+      path: '/sessions'
+      fullPath: '/websites/$websiteId/sessions/'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdSessionsIndexRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
+    '/_app/websites/$websiteId/sessions/$sessionId': {
+      id: '/_app/websites/$websiteId/sessions/$sessionId'
+      path: '/sessions/$sessionId'
+      fullPath: '/websites/$websiteId/sessions/$sessionId'
+      preLoaderRoute: typeof AppWebsitesWebsiteIdSessionsSessionIdRouteImport
+      parentRoute: typeof AppWebsitesWebsiteIdRouteRoute
+    }
   }
 }
 
+interface AppAdminRouteRouteChildren {
+  AppAdminSecurityRoute: typeof AppAdminSecurityRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+  AppAdminTeamsTeamIdRoute: typeof AppAdminTeamsTeamIdRoute
+  AppAdminUsersUserIdRoute: typeof AppAdminUsersUserIdRoute
+  AppAdminWebsitesWebsiteIdRoute: typeof AppAdminWebsitesWebsiteIdRoute
+  AppAdminTeamsIndexRoute: typeof AppAdminTeamsIndexRoute
+  AppAdminUsersIndexRoute: typeof AppAdminUsersIndexRoute
+  AppAdminWebsitesIndexRoute: typeof AppAdminWebsitesIndexRoute
+}
+
+const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
+  AppAdminSecurityRoute: AppAdminSecurityRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+  AppAdminTeamsTeamIdRoute: AppAdminTeamsTeamIdRoute,
+  AppAdminUsersUserIdRoute: AppAdminUsersUserIdRoute,
+  AppAdminWebsitesWebsiteIdRoute: AppAdminWebsitesWebsiteIdRoute,
+  AppAdminTeamsIndexRoute: AppAdminTeamsIndexRoute,
+  AppAdminUsersIndexRoute: AppAdminUsersIndexRoute,
+  AppAdminWebsitesIndexRoute: AppAdminWebsitesIndexRoute,
+}
+
+const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
+  AppAdminRouteRouteChildren,
+)
+
+interface AppSettingsRouteRouteChildren {
+  AppSettingsApiKeysRoute: typeof AppSettingsApiKeysRoute
+  AppSettingsPreferencesRoute: typeof AppSettingsPreferencesRoute
+  AppSettingsProfileRoute: typeof AppSettingsProfileRoute
+  AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsWebsitesRoute: typeof AppSettingsWebsitesRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppSettingsTeamsTeamIdRoute: typeof AppSettingsTeamsTeamIdRoute
+  AppSettingsTeamsIndexRoute: typeof AppSettingsTeamsIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettingsApiKeysRoute: AppSettingsApiKeysRoute,
+  AppSettingsPreferencesRoute: AppSettingsPreferencesRoute,
+  AppSettingsProfileRoute: AppSettingsProfileRoute,
+  AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsWebsitesRoute: AppSettingsWebsitesRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppSettingsTeamsTeamIdRoute: AppSettingsTeamsTeamIdRoute,
+  AppSettingsTeamsIndexRoute: AppSettingsTeamsIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
+
 interface AppWebsitesWebsiteIdRouteRouteChildren {
+  AppWebsitesWebsiteIdAttributionRoute: typeof AppWebsitesWebsiteIdAttributionRoute
+  AppWebsitesWebsiteIdBreakdownRoute: typeof AppWebsitesWebsiteIdBreakdownRoute
+  AppWebsitesWebsiteIdCohortsRoute: typeof AppWebsitesWebsiteIdCohortsRoute
+  AppWebsitesWebsiteIdCompareRoute: typeof AppWebsitesWebsiteIdCompareRoute
+  AppWebsitesWebsiteIdEventsRoute: typeof AppWebsitesWebsiteIdEventsRoute
+  AppWebsitesWebsiteIdFunnelsRoute: typeof AppWebsitesWebsiteIdFunnelsRoute
+  AppWebsitesWebsiteIdGoalsRoute: typeof AppWebsitesWebsiteIdGoalsRoute
+  AppWebsitesWebsiteIdHeatmapsRoute: typeof AppWebsitesWebsiteIdHeatmapsRoute
+  AppWebsitesWebsiteIdJourneysRoute: typeof AppWebsitesWebsiteIdJourneysRoute
+  AppWebsitesWebsiteIdPerformanceRoute: typeof AppWebsitesWebsiteIdPerformanceRoute
   AppWebsitesWebsiteIdRealtimeRoute: typeof AppWebsitesWebsiteIdRealtimeRoute
+  AppWebsitesWebsiteIdRetentionRoute: typeof AppWebsitesWebsiteIdRetentionRoute
+  AppWebsitesWebsiteIdRevenueRoute: typeof AppWebsitesWebsiteIdRevenueRoute
+  AppWebsitesWebsiteIdSegmentsRoute: typeof AppWebsitesWebsiteIdSegmentsRoute
+  AppWebsitesWebsiteIdSettingsRoute: typeof AppWebsitesWebsiteIdSettingsRoute
+  AppWebsitesWebsiteIdUtmRoute: typeof AppWebsitesWebsiteIdUtmRoute
   AppWebsitesWebsiteIdIndexRoute: typeof AppWebsitesWebsiteIdIndexRoute
+  AppWebsitesWebsiteIdReplaysReplayIdRoute: typeof AppWebsitesWebsiteIdReplaysReplayIdRoute
+  AppWebsitesWebsiteIdSessionsSessionIdRoute: typeof AppWebsitesWebsiteIdSessionsSessionIdRoute
+  AppWebsitesWebsiteIdReplaysIndexRoute: typeof AppWebsitesWebsiteIdReplaysIndexRoute
+  AppWebsitesWebsiteIdSessionsIndexRoute: typeof AppWebsitesWebsiteIdSessionsIndexRoute
 }
 
 const AppWebsitesWebsiteIdRouteRouteChildren: AppWebsitesWebsiteIdRouteRouteChildren =
   {
+    AppWebsitesWebsiteIdAttributionRoute: AppWebsitesWebsiteIdAttributionRoute,
+    AppWebsitesWebsiteIdBreakdownRoute: AppWebsitesWebsiteIdBreakdownRoute,
+    AppWebsitesWebsiteIdCohortsRoute: AppWebsitesWebsiteIdCohortsRoute,
+    AppWebsitesWebsiteIdCompareRoute: AppWebsitesWebsiteIdCompareRoute,
+    AppWebsitesWebsiteIdEventsRoute: AppWebsitesWebsiteIdEventsRoute,
+    AppWebsitesWebsiteIdFunnelsRoute: AppWebsitesWebsiteIdFunnelsRoute,
+    AppWebsitesWebsiteIdGoalsRoute: AppWebsitesWebsiteIdGoalsRoute,
+    AppWebsitesWebsiteIdHeatmapsRoute: AppWebsitesWebsiteIdHeatmapsRoute,
+    AppWebsitesWebsiteIdJourneysRoute: AppWebsitesWebsiteIdJourneysRoute,
+    AppWebsitesWebsiteIdPerformanceRoute: AppWebsitesWebsiteIdPerformanceRoute,
     AppWebsitesWebsiteIdRealtimeRoute: AppWebsitesWebsiteIdRealtimeRoute,
+    AppWebsitesWebsiteIdRetentionRoute: AppWebsitesWebsiteIdRetentionRoute,
+    AppWebsitesWebsiteIdRevenueRoute: AppWebsitesWebsiteIdRevenueRoute,
+    AppWebsitesWebsiteIdSegmentsRoute: AppWebsitesWebsiteIdSegmentsRoute,
+    AppWebsitesWebsiteIdSettingsRoute: AppWebsitesWebsiteIdSettingsRoute,
+    AppWebsitesWebsiteIdUtmRoute: AppWebsitesWebsiteIdUtmRoute,
     AppWebsitesWebsiteIdIndexRoute: AppWebsitesWebsiteIdIndexRoute,
+    AppWebsitesWebsiteIdReplaysReplayIdRoute:
+      AppWebsitesWebsiteIdReplaysReplayIdRoute,
+    AppWebsitesWebsiteIdSessionsSessionIdRoute:
+      AppWebsitesWebsiteIdSessionsSessionIdRoute,
+    AppWebsitesWebsiteIdReplaysIndexRoute:
+      AppWebsitesWebsiteIdReplaysIndexRoute,
+    AppWebsitesWebsiteIdSessionsIndexRoute:
+      AppWebsitesWebsiteIdSessionsIndexRoute,
   }
 
 const AppWebsitesWebsiteIdRouteRouteWithChildren =
@@ -183,14 +1128,30 @@ const AppWebsitesWebsiteIdRouteRouteWithChildren =
   )
 
 interface AppRouteChildren {
+  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   AppWebsitesWebsiteIdRouteRoute: typeof AppWebsitesWebsiteIdRouteRouteWithChildren
+  AppBoardsBoardIdRoute: typeof AppBoardsBoardIdRoute
+  AppLinksLinkIdRoute: typeof AppLinksLinkIdRoute
+  AppPixelsPixelIdRoute: typeof AppPixelsPixelIdRoute
+  AppBoardsIndexRoute: typeof AppBoardsIndexRoute
+  AppLinksIndexRoute: typeof AppLinksIndexRoute
+  AppPixelsIndexRoute: typeof AppPixelsIndexRoute
   AppWebsitesIndexRoute: typeof AppWebsitesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   AppWebsitesWebsiteIdRouteRoute: AppWebsitesWebsiteIdRouteRouteWithChildren,
+  AppBoardsBoardIdRoute: AppBoardsBoardIdRoute,
+  AppLinksLinkIdRoute: AppLinksLinkIdRoute,
+  AppPixelsPixelIdRoute: AppPixelsPixelIdRoute,
+  AppBoardsIndexRoute: AppBoardsIndexRoute,
+  AppLinksIndexRoute: AppLinksIndexRoute,
+  AppPixelsIndexRoute: AppPixelsIndexRoute,
   AppWebsitesIndexRoute: AppWebsitesIndexRoute,
 }
 
@@ -199,6 +1160,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  ShareSlugRoute: ShareSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

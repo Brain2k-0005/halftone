@@ -2,8 +2,18 @@ import { useParams } from "@tanstack/react-router"
 import { CalendarIcon, FilterIcon, PlusIcon, XIcon } from "lucide-react"
 import { useState } from "react"
 import { Segmented } from "@/components/app/section-card"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useApi } from "@/lib/api-client"
 import { RANGES, type RangeKey } from "@/lib/range"
 import { cn } from "@/lib/utils"
@@ -17,9 +27,15 @@ import {
   type Operator,
 } from "@/lib/website-query"
 
-const RANGE_OPTIONS = (Object.keys(RANGES) as RangeKey[]).map((value) => ({ value, label: RANGES[value].label }))
+const RANGE_OPTIONS = (Object.keys(RANGES) as RangeKey[]).map((value) => ({
+  value,
+  label: RANGES[value].label,
+}))
 
-const toDateInput = (ms: number) => new Date(ms - new Date(ms).getTimezoneOffset() * 60_000).toISOString().slice(0, 10)
+const toDateInput = (ms: number) =>
+  new Date(ms - new Date(ms).getTimezoneOffset() * 60_000)
+    .toISOString()
+    .slice(0, 10)
 
 /** Presets ("24h | Week | Month | 90 D | Year") plus a custom range popover, bound to the URL. */
 export function DateRangeControl() {
@@ -41,7 +57,9 @@ export function DateRangeControl() {
       <Segmented
         value={custom ? ("" as RangeKey) : range}
         options={RANGE_OPTIONS}
-        onChange={(r) => set({ range: r, startAt: undefined, endAt: undefined })}
+        onChange={(r) =>
+          set({ range: r, startAt: undefined, endAt: undefined })
+        }
       />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
@@ -94,8 +112,10 @@ export function DateRangeControl() {
   )
 }
 
-const fieldLabel = (key: string) => FILTER_FIELDS.find((f) => f.key === key)?.label ?? key
-const operatorLabel = (key: string) => OPERATORS.find((o) => o.key === key)?.label ?? key
+const fieldLabel = (key: string) =>
+  FILTER_FIELDS.find((f) => f.key === key)?.label ?? key
+const operatorLabel = (key: string) =>
+  OPERATORS.find((o) => o.key === key)?.label ?? key
 
 function AddFilter({ websiteId }: { websiteId: string }) {
   const set = useSetWebsiteSearch()
@@ -135,7 +155,10 @@ function AddFilter({ websiteId }: { websiteId: string }) {
             <Select
               value={field}
               onValueChange={(v) => setField(v as FilterField)}
-              items={FILTER_FIELDS.map((f) => ({ value: f.key, label: f.label }))}
+              items={FILTER_FIELDS.map((f) => ({
+                value: f.key,
+                label: f.label,
+              }))}
             >
               <SelectTrigger size="sm" className="w-full">
                 <SelectValue />
@@ -206,13 +229,17 @@ export function FilterBar({ className }: { className?: string }) {
   const { websiteId } = useParams({ strict: false }) as { websiteId?: string }
   const { filters } = useWebsiteQuery()
   const set = useSetWebsiteSearch()
-  const active = Object.entries(filters).filter(([k]) => k !== "segment" && k !== "cohort")
+  const active = Object.entries(filters).filter(
+    ([k]) => k !== "segment" && k !== "cohort"
+  )
 
   if (!websiteId) return null
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      {active.length > 0 && <FilterIcon className="size-3.5 text-muted-foreground" />}
+      {active.length > 0 && (
+        <FilterIcon className="size-3.5 text-muted-foreground" />
+      )}
       {active.map(([key, raw]) => {
         const { operator, value } = parseFilter(raw)
         return (
@@ -221,7 +248,9 @@ export function FilterBar({ className }: { className?: string }) {
             className="inline-flex h-7 items-center gap-1.5 rounded-lg border bg-card pr-1 pl-2.5 text-xs shadow-xs"
           >
             <span className="text-muted-foreground">{fieldLabel(key)}</span>
-            <span className="text-muted-foreground">{operatorLabel(operator)}</span>
+            <span className="text-muted-foreground">
+              {operatorLabel(operator)}
+            </span>
             <span className="max-w-48 truncate font-medium">{value}</span>
             <button
               type="button"
@@ -238,7 +267,9 @@ export function FilterBar({ className }: { className?: string }) {
       {active.length > 1 && (
         <button
           type="button"
-          onClick={() => set(Object.fromEntries(active.map(([k]) => [k, undefined])))}
+          onClick={() =>
+            set(Object.fromEntries(active.map(([k]) => [k, undefined])))
+          }
           className="text-xs font-medium text-muted-foreground hover:text-foreground"
         >
           Clear all
