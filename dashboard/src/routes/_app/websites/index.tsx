@@ -1,11 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { GlobeIcon } from "lucide-react"
 import { RangeSwitch } from "@/components/app/range-switch"
-import { SectionCard } from "@/components/app/section-card"
-import { ChangeBadge, Sparkline } from "@/components/app/stat"
-import { Badge } from "@/components/reui/badge"
+import {
+  DeltaPill,
+  Pill,
+  SectionCard,
+  Sparkline,
+} from "@/components/app/section-card"
 import { websitesSummaryFn } from "@/lib/api"
-import { formatNumber } from "@/lib/format"
+import { formatNumber, percentChange } from "@/lib/format"
 import { DEFAULT_RANGE, isRange, RANGES, type RangeKey } from "@/lib/range"
 
 export const Route = createFileRoute("/_app/websites/")({
@@ -13,7 +16,7 @@ export const Route = createFileRoute("/_app/websites/")({
     isRange(s.range) ? { range: s.range } : {},
   loaderDeps: ({ search }) => ({ range: search.range ?? DEFAULT_RANGE }),
   loader: ({ deps }) => websitesSummaryFn({ data: { range: deps.range } }),
-  staticData: { crumb: { label: "Websites" } },
+  staticData: { crumb: { label: "Websites", icon: "websites" } },
   head: () => ({ meta: [{ title: "Websites · Umami" }] }),
   component: WebsitesPage,
 })
@@ -35,7 +38,7 @@ function WebsitesPage() {
       }
     >
       {sites.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center gap-1 text-center">
+        <div className="flex h-48 flex-col items-center justify-center gap-1 border-t text-center">
           <p className="text-sm font-medium">No websites yet</p>
           <p className="text-sm text-muted-foreground">
             Add a website in Umami to start tracking.
@@ -43,54 +46,62 @@ function WebsitesPage() {
         </div>
       ) : (
         <ul className="divide-y border-t">
-          {sites.map((site) => (
-            <li key={site.id}>
-              <Link
-                to="/websites/$websiteId"
-                params={{ websiteId: site.id }}
-                search={{ range }}
-                className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/40 md:grid-cols-[auto_minmax(0,1fr)_8rem_auto_7rem]"
-              >
-                <span className="flex size-9 items-center justify-center rounded-lg border bg-background dark:bg-input/30">
-                  <GlobeIcon className="size-4 text-muted-foreground" />
-                </span>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-semibold">
-                      {site.name}
-                    </span>
-                    {site.active > 0 && (
-                      <Badge variant="success-light" radius="full">
-                        <span className="size-1.5 rounded-full bg-success" />
-                        {site.active} online
-                      </Badge>
-                    )}
+          {sites.map((site) => {
+            const change = percentChange(
+              site.stats.visitors,
+              site.stats.comparison.visitors
+            )
+            return (
+              <li key={site.id}>
+                <Link
+                  to="/websites/$websiteId"
+                  params={{ websiteId: site.id }}
+                  search={{ range }}
+                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 py-3.5 transition-colors hover:bg-accent/40 md:grid-cols-[auto_minmax(0,1fr)_6rem_5.5rem_6rem]"
+                >
+                  <span className="flex size-9 items-center justify-center rounded-lg bg-brand-soft text-brand-deep">
+                    <GlobeIcon className="size-4" strokeWidth={1.75} />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="truncate text-[13px] font-semibold">
+                        {site.name}
+                      </p>
+                      {site.active > 0 && (
+                        <Pill
+                          tone="success"
+                          dot
+                          className="px-1.5 py-px text-[11px]"
+                        >
+                          {site.active} online
+                        </Pill>
+                      )}
+                    </div>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {site.domain}
+                    </p>
                   </div>
-                  <div className="truncate text-xs text-muted-foreground">
-                    {site.domain}
+                  <div className="hidden md:block">
+                    <Sparkline
+                      values={site.sessions.map((p) => p.y)}
+                      tone={
+                        change !== null && change < 0 ? "warning" : "success"
+                      }
+                    />
                   </div>
-                </div>
-                <div className="hidden md:block">
-                  <Sparkline
-                    data={site.sessions.map((p) => p.y)}
-                    color="var(--chart-1)"
-                  />
-                </div>
-                <div className="hidden justify-end md:flex">
-                  <ChangeBadge
-                    current={site.stats.visitors}
-                    previous={site.stats.comparison.visitors}
-                  />
-                </div>
-                <div className="text-right">
-                  <div className="tabular text-sm font-semibold">
-                    {formatNumber(site.stats.visitors)}
+                  <div className="hidden justify-end md:flex">
+                    {change !== null && <DeltaPill value={change} />}
                   </div>
-                  <div className="text-xs text-muted-foreground">visitors</div>
-                </div>
-              </Link>
-            </li>
-          ))}
+                  <div className="text-right">
+                    <p className="tabular text-[13px] font-semibold">
+                      {formatNumber(site.stats.visitors)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">visitors</p>
+                  </div>
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       )}
     </SectionCard>

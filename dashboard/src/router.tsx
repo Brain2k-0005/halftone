@@ -20,6 +20,11 @@ declare module "@tanstack/react-router" {
     router: ReturnType<typeof getRouter>
   }
   interface StaticDataRouteOption {
-    crumb?: { label: string; to?: string; params?: Record<string, string> }
+    crumb?: {
+      label: string
+      to?: string
+      params?: Record<string, string>
+      icon?: "overview" | "websites" | "website" | "realtime"
+    }
   }
 }

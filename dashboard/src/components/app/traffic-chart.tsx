@@ -6,6 +6,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import type { Point } from "@/lib/api"
+import { cn } from "@/lib/utils"
 
 const config = {
   visitors: { label: "Visitors", color: "var(--chart-1)" },
@@ -26,11 +27,13 @@ export function TrafficChart({
   sessions,
   unit,
   mode,
+  className,
 }: {
   pageviews: Point[]
   sessions: Point[]
   unit: string
   mode: ChartMode
+  className?: string
 }) {
   const byDate = new Map(sessions.map((p) => [p.x, p.y]))
   const data = pageviews.map((p) => ({
@@ -40,7 +43,10 @@ export function TrafficChart({
   }))
 
   return (
-    <ChartContainer config={config} className="aspect-auto h-72 w-full">
+    <ChartContainer
+      config={config}
+      className={cn("aspect-auto h-72 w-full", className)}
+    >
       <BarChart data={data} margin={{ left: -12, right: 4, top: 8 }} barGap={2}>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis

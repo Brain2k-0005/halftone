@@ -13,7 +13,7 @@ export function RouteError({ error, reset }: ErrorComponentProps) {
   }
 
   return (
-    <div className="bg-dither flex flex-col items-center gap-3 rounded-xl border bg-card px-6 py-16 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-xl border bg-card px-6 py-16 text-center">
       <span className="flex size-10 items-center justify-center rounded-lg border bg-background dark:bg-input/30">
         <TriangleAlertIcon className="size-5 text-destructive" />
       </span>

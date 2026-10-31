@@ -10,6 +10,7 @@ export const Route = createFileRoute("/_app/websites/$websiteId")({
         label: website.name,
         to: "/websites/$websiteId",
         params: { websiteId: website.id },
+        icon: "website" as const,
       },
     }
   },

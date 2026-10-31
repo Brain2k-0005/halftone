@@ -5,7 +5,6 @@ import {
   LayoutGridIcon,
   LogOutIcon,
   MoonIcon,
-  SearchIcon,
 } from "lucide-react"
 import {
   createContext,
@@ -24,9 +23,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { setTheme } from "@/components/app/theme"
 import type { Website } from "@/lib/api"
-import { cn } from "@/lib/utils"
 
 const CommandMenuContext = createContext<{ open: () => void }>({
   open: () => {},
@@ -64,11 +62,10 @@ export function CommandMenuProvider({
     fn()
   }
 
-  const toggleTheme = () => {
-    const dark = !document.documentElement.classList.contains("dark")
-    document.documentElement.classList.toggle("dark", dark)
-    localStorage.setItem("umami-theme", dark ? "dark" : "light")
-  }
+  const toggleTheme = () =>
+    setTheme(
+      document.documentElement.classList.contains("dark") ? "light" : "dark"
+    )
 
   return (
     <CommandMenuContext.Provider value={{ open: () => setOpen(true) }}>
@@ -145,25 +142,5 @@ export function CommandMenuProvider({
         </Command>
       </CommandDialog>
     </CommandMenuContext.Provider>
-  )
-}
-
-export function SearchButton({ className }: { className?: string }) {
-  const { open } = useCommandMenu()
-  return (
-    <button
-      type="button"
-      onClick={open}
-      className={cn(
-        "flex h-8 items-center gap-2 rounded-lg border bg-background px-2.5 text-sm text-muted-foreground shadow-xs transition-colors hover:text-foreground dark:bg-input/30",
-        className
-      )}
-    >
-      <SearchIcon className="size-4" />
-      <span className="flex-1 text-left">Search …</span>
-      <KbdGroup>
-        <Kbd>⌘K</Kbd>
-      </KbdGroup>
-    </button>
   )
 }

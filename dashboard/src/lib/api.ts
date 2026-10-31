@@ -126,12 +126,15 @@ export const websitesFn = createServerFn({ method: "GET" }).handler(() =>
     const res = await umami<{ data: Website[] }>("/websites", {
       query: { pageSize: 200 },
     })
-    return res.data.map(({ id, name, domain, createdAt }) => ({
-      id,
-      name,
-      domain,
-      createdAt,
-    }))
+    // Online visitors per site feed the sidebar's quick access counters.
+    return Promise.all(
+      res.data.map(async ({ id, name, domain, createdAt }) => {
+        const active = await umami<{ visitors: number }>(
+          `/websites/${id}/active`
+        ).catch(() => ({ visitors: 0 }))
+        return { id, name, domain, createdAt, active: active.visitors }
+      })
+    )
   })
 )
 

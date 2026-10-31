@@ -9,8 +9,8 @@ import {
   UsersIcon,
 } from "lucide-react"
 import { RangeSwitch } from "@/components/app/range-switch"
-import { SectionCard } from "@/components/app/section-card"
-import { Stat } from "@/components/app/stat"
+import { Progress, SectionCard } from "@/components/app/section-card"
+import { StatGrid } from "@/components/app/stat"
 import { TrafficChart } from "@/components/app/traffic-chart"
 import { websitesSummaryFn, type Point, type Stats } from "@/lib/api"
 import {
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_app/")({
     isRange(s.range) ? { range: s.range } : {},
   loaderDeps: ({ search }) => ({ range: search.range ?? DEFAULT_RANGE }),
   loader: ({ deps }) => websitesSummaryFn({ data: { range: deps.range } }),
-  staticData: { crumb: { label: "Overview" } },
+  staticData: { crumb: { label: "Overview", icon: "overview" } },
   component: OverviewPage,
 })
 
@@ -49,6 +49,7 @@ function OverviewPage() {
   const sites = Route.useLoaderData()
   const { range = DEFAULT_RANGE } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
+  const unit = resolveRange(range).unit
 
   const sum = (pick: (s: Stats) => number, prev = false) =>
     sites.reduce(
@@ -91,8 +92,9 @@ function OverviewPage() {
   const maxVisitors = Math.max(1, ...ranked.map((s) => s.stats.visitors))
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6">
+    <div className="flex flex-col gap-5">
       <SectionCard
+        dither
         title="Overview"
         description="The key numbers across all websites"
         actions={
@@ -103,8 +105,8 @@ function OverviewPage() {
         }
         footer={
           <>
-            <span className="flex min-w-0 items-center gap-2">
-              <InfoIcon className="size-4 shrink-0" />
+            <p className="flex min-w-0 items-center gap-2 text-muted-foreground">
+              <InfoIcon className="size-3.5 shrink-0" />
               <span className="truncate">
                 {formatNumber(visitors)} visitors in {RANGES[range].long}
                 {change !== null &&
@@ -112,61 +114,69 @@ function OverviewPage() {
                   `, ${Math.abs(Math.round(change))} % ${change > 0 ? "above" : "below"} the previous period`}
                 {active > 0 && ` · ${active} online now`}
               </span>
-            </span>
+            </p>
             <Link
               to="/websites"
-              className="flex shrink-0 items-center gap-1 font-medium text-foreground hover:underline"
+              className="inline-flex items-center gap-1 font-medium hover:underline"
             >
               View websites <ArrowRightIcon className="size-3.5" />
             </Link>
           </>
         }
       >
-        <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x xl:grid-cols-4 xl:divide-y-0">
-          <Stat
-            icon={<UsersIcon />}
-            label="Visitors"
-            value={formatNumber(visitors)}
-            current={visitors}
-            previous={prevVisitors}
-            spark={sessions.map((p) => p.y)}
-          />
-          <Stat
-            icon={<EyeIcon />}
-            label="Views"
-            value={formatNumber(views)}
-            current={views}
-            previous={prevViews}
-            spark={pageviews.map((p) => p.y)}
-          />
-          <Stat
-            icon={<UndoIcon />}
-            label="Bounce rate"
-            value={formatPercent(bounce)}
-            current={bounce}
-            previous={prevBounce}
-            invert
-          />
-          <Stat
-            icon={<ClockIcon />}
-            label="Avg. visit duration"
-            value={formatDuration(duration)}
-            current={duration}
-            previous={prevDuration}
-          />
-        </div>
+        <StatGrid
+          columns={[
+            {
+              key: "visitors",
+              icon: UsersIcon,
+              label: "Visitors",
+              value: formatNumber(visitors),
+              current: visitors,
+              previous: prevVisitors,
+              spark: sessions.map((p) => p.y),
+            },
+            {
+              key: "views",
+              icon: EyeIcon,
+              label: "Views",
+              value: formatNumber(views),
+              current: views,
+              previous: prevViews,
+              spark: pageviews.map((p) => p.y),
+            },
+            {
+              key: "bounce",
+              icon: UndoIcon,
+              label: "Bounce rate",
+              value: formatPercent(bounce),
+              current: bounce,
+              previous: prevBounce,
+              invert: true,
+            },
+            {
+              key: "duration",
+              icon: ClockIcon,
+              label: "Avg. visit duration",
+              value: formatDuration(duration),
+              current: duration,
+              previous: prevDuration,
+            },
+          ]}
+        />
       </SectionCard>
 
-      <div className="grid gap-4 md:gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
         <SectionCard
+          dither
           title="Visitor trend"
-          description={`Unique visitors per ${resolveRange(range).unit}, all websites`}
+          description={`Unique visitors per ${unit}, all websites`}
         >
-          <div className="px-3 pb-4">
+          <div className="flex h-full flex-col px-5 pb-4">
             <TrafficChart
+              className="h-auto min-h-72 flex-1"
               pageviews={sessions}
               sessions={sessions}
-              unit={resolveRange(range).unit}
+              unit={unit}
               mode="visitors"
             />
           </div>
@@ -174,7 +184,7 @@ function OverviewPage() {
 
         <SectionCard
           title="Top websites"
-          description="Ranked by visitors in the period"
+          description="The busiest websites in the period"
           actions={
             <Link
               to="/websites"
@@ -185,9 +195,9 @@ function OverviewPage() {
           }
         >
           {ranked.length === 0 ? (
-            <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+            <p className="flex h-40 items-center justify-center text-sm text-muted-foreground">
               No websites yet
-            </div>
+            </p>
           ) : (
             <ul className="divide-y border-t">
               {ranked.map((site) => (
@@ -196,38 +206,29 @@ function OverviewPage() {
                     to="/websites/$websiteId"
                     params={{ websiteId: site.id }}
                     search={{ range }}
-                    className="block px-5 py-3.5 transition-colors hover:bg-muted/40"
+                    className="block px-5 py-3.5 transition-colors hover:bg-accent/40"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background dark:bg-input/30">
-                        <GlobeIcon className="size-4 text-muted-foreground" />
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand-deep">
+                        <GlobeIcon className="size-4" strokeWidth={1.75} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-semibold">
+                        <p className="truncate text-[13px] font-semibold">
                           {site.name}
-                        </div>
-                        <div className="truncate text-xs text-muted-foreground">
+                        </p>
+                        <p className="truncate text-xs text-muted-foreground">
                           {site.domain}
                           {site.active > 0 && ` · ${site.active} online`}
-                        </div>
+                        </p>
                       </div>
-                      <div className="text-right">
-                        <div className="tabular text-sm font-semibold">
-                          {formatNumber(site.stats.visitors)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          visitors
-                        </div>
-                      </div>
+                      <span className="tabular text-[13px] font-semibold">
+                        {formatNumber(site.stats.visitors)}
+                      </span>
                     </div>
-                    <div className="mt-3 h-1 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full bg-chart-1"
-                        style={{
-                          width: `${(site.stats.visitors / maxVisitors) * 100}%`,
-                        }}
-                      />
-                    </div>
+                    <Progress
+                      className="mt-3"
+                      percent={(site.stats.visitors / maxVisitors) * 100}
+                    />
                   </Link>
                 </li>
               ))}

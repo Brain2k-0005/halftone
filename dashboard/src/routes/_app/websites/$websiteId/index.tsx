@@ -7,6 +7,7 @@ import {
   FileTextIcon,
   LogInIcon,
   LogOutIcon,
+  MapPinIcon,
   MonitorIcon,
   MousePointerClickIcon,
   ShareIcon,
@@ -17,8 +18,8 @@ import {
 } from "lucide-react"
 import { useState, type ReactNode } from "react"
 import { RangeSwitch } from "@/components/app/range-switch"
-import { Segmented, SectionCard } from "@/components/app/section-card"
-import { Stat } from "@/components/app/stat"
+import { SectionCard, Segmented } from "@/components/app/section-card"
+import { StatGrid } from "@/components/app/stat"
 import { countryName, flag, TopList } from "@/components/app/top-list"
 import { TrafficChart, type ChartMode } from "@/components/app/traffic-chart"
 import {
@@ -29,6 +30,7 @@ import {
 } from "@/lib/api"
 import { formatDuration, formatNumber, formatPercent } from "@/lib/format"
 import { DEFAULT_RANGE, isRange, RANGES, type RangeKey } from "@/lib/range"
+import { cn } from "@/lib/utils"
 
 const TYPES = [
   "path",
@@ -57,7 +59,7 @@ export const Route = createFileRoute("/_app/websites/$websiteId/")({
             websiteId: params.websiteId,
             range: deps.range,
             type,
-            limit: 8,
+            limit: 6,
           },
         })
       ),
@@ -77,21 +79,27 @@ const DEVICE_ICONS: Record<string, ReactNode> = {
   tablet: <TabletIcon />,
 }
 
+interface Tab {
+  value: MetricType
+  label: string
+  icon?: (row: MetricRow) => ReactNode
+  rowLabel?: (row: MetricRow) => ReactNode
+}
+
 function TabbedList({
   title,
   description,
   tabs,
   metrics,
+  unit = "visitors",
+  className,
 }: {
   title: string
   description: string
-  tabs: {
-    value: MetricType
-    label: string
-    icon?: (row: MetricRow) => ReactNode
-    label_?: (row: MetricRow) => ReactNode
-  }[]
+  tabs: Tab[]
   metrics: Record<string, MetricRow[]>
+  unit?: string
+  className?: string
 }) {
   const [tab, setTab] = useState(tabs[0]!.value)
   const active = tabs.find((t) => t.value === tab)!
@@ -100,17 +108,20 @@ function TabbedList({
     <SectionCard
       title={title}
       description={description}
+      className={className}
       actions={
         tabs.length > 1 && (
           <Segmented value={tab} options={tabs} onChange={setTab} />
         )
       }
-      bodyClassName="border-t"
     >
       <TopList
         rows={metrics[tab] ?? []}
         renderIcon={active.icon}
-        renderLabel={active.label_}
+        renderLabel={active.rowLabel}
+        renderMeta={(row, share) =>
+          `${formatNumber(row.y)} ${unit} · ${Math.round(share)} %`
+        }
       />
     </SectionCard>
   )
@@ -135,8 +146,9 @@ function WebsiteDashboard() {
   const prevDuration = prev.visits ? prev.totaltime / prev.visits : 0
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6">
+    <div className="flex flex-col gap-5">
       <SectionCard
+        dither
         title="Overview"
         description="The key numbers for the period"
         actions={
@@ -147,100 +159,122 @@ function WebsiteDashboard() {
         }
         footer={
           <>
-            <span className="flex items-center gap-2">
-              <span className="relative flex size-2">
-                {active > 0 && (
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-success opacity-60" />
+            <p className="flex min-w-0 items-center gap-2 text-muted-foreground">
+              <span
+                className={cn(
+                  "size-2 shrink-0 rounded-full",
+                  active > 0 ? "bg-success" : "bg-muted-foreground/40"
                 )}
-                <span
-                  className={`relative inline-flex size-2 rounded-full ${active > 0 ? "bg-success" : "bg-muted-foreground/40"}`}
-                />
+                aria-hidden
+              />
+              <span className="truncate">
+                {active} {active === 1 ? "visitor" : "visitors"} online right
+                now · {formatNumber(stats.pageviews)} views in{" "}
+                {RANGES[range].long}
               </span>
-              {active} {active === 1 ? "visitor" : "visitors"} online right now
-              · {formatNumber(stats.pageviews)} views in {RANGES[range].long}
-            </span>
+            </p>
             <Link
               to="/websites/$websiteId/realtime"
               params={{ websiteId }}
-              className="flex shrink-0 items-center gap-1 font-medium text-foreground hover:underline"
+              className="inline-flex items-center gap-1 font-medium hover:underline"
             >
               View realtime <ArrowRightIcon className="size-3.5" />
             </Link>
           </>
         }
       >
-        <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x lg:grid-cols-3 2xl:grid-cols-5 2xl:divide-y-0">
-          <Stat
-            icon={<UsersIcon />}
-            label="Visitors"
-            value={formatNumber(stats.visitors)}
-            current={stats.visitors}
-            previous={prev.visitors}
-            spark={series.sessions.map((p) => p.y)}
-          />
-          <Stat
-            icon={<MousePointerClickIcon />}
-            label="Visits"
-            value={formatNumber(stats.visits)}
-            current={stats.visits}
-            previous={prev.visits}
-          />
-          <Stat
-            icon={<EyeIcon />}
-            label="Views"
-            value={formatNumber(stats.pageviews)}
-            current={stats.pageviews}
-            previous={prev.pageviews}
-            spark={series.pageviews.map((p) => p.y)}
-            sparkColor="var(--chart-1)"
-          />
-          <Stat
-            icon={<UndoIcon />}
-            label="Bounce rate"
-            value={formatPercent(bounce)}
-            current={bounce}
-            previous={prevBounce}
-            invert
-          />
-          <Stat
-            icon={<ClockIcon />}
-            label="Visit duration"
-            value={formatDuration(duration)}
-            current={duration}
-            previous={prevDuration}
-          />
-        </div>
+        <StatGrid
+          columns={[
+            {
+              key: "visitors",
+              icon: UsersIcon,
+              label: "Visitors",
+              value: formatNumber(stats.visitors),
+              current: stats.visitors,
+              previous: prev.visitors,
+              spark: series.sessions.map((p) => p.y),
+            },
+            {
+              key: "visits",
+              icon: MousePointerClickIcon,
+              label: "Visits",
+              value: formatNumber(stats.visits),
+              current: stats.visits,
+              previous: prev.visits,
+            },
+            {
+              key: "views",
+              icon: EyeIcon,
+              label: "Views",
+              value: formatNumber(stats.pageviews),
+              current: stats.pageviews,
+              previous: prev.pageviews,
+              spark: series.pageviews.map((p) => p.y),
+            },
+            {
+              key: "bounce",
+              icon: UndoIcon,
+              label: "Bounce rate",
+              value: formatPercent(bounce),
+              current: bounce,
+              previous: prevBounce,
+              invert: true,
+            },
+            {
+              key: "duration",
+              icon: ClockIcon,
+              label: "Visit duration",
+              value: formatDuration(duration),
+              current: duration,
+              previous: prevDuration,
+            },
+          ]}
+        />
       </SectionCard>
 
-      <SectionCard
-        title="Traffic trend"
-        description={`Visitors and views per ${unit}`}
-        actions={
-          <Segmented
-            value={mode}
-            onChange={setMode}
-            options={[
-              { value: "both", label: "Combined" },
-              { value: "visitors", label: "Visitors" },
-              { value: "views", label: "Views" },
-            ]}
-          />
-        }
-      >
-        <div className="px-3 pb-4">
-          <TrafficChart
-            pageviews={series.pageviews}
-            sessions={series.sessions}
-            unit={unit}
-            mode={mode}
-          />
-        </div>
-      </SectionCard>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
+        <SectionCard
+          dither
+          title="Traffic trend"
+          description={`Visitors and views per ${unit}`}
+          actions={
+            <Segmented
+              value={mode}
+              onChange={setMode}
+              options={[
+                { value: "both", label: "Combined" },
+                { value: "visitors", label: "Visitors" },
+                { value: "views", label: "Views" },
+              ]}
+            />
+          }
+        >
+          <div className="flex h-full flex-col px-5 pb-4">
+            <TrafficChart
+              className="h-auto min-h-72 flex-1"
+              pageviews={series.pageviews}
+              sessions={series.sessions}
+              unit={unit}
+              mode={mode}
+            />
+            <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+              {mode !== "views" && (
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-brand" /> Visitors
+                </span>
+              )}
+              {mode !== "visitors" && (
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-chart-2" /> Views
+                </span>
+              )}
+            </div>
+          </div>
+        </SectionCard>
 
-      <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
         <TabbedList
-          title="Pages"
-          description="Most visited pages"
+          title="Top pages"
+          description="The most visited pages"
           metrics={metrics}
           tabs={[
             { value: "path", label: "Path", icon: () => <FileTextIcon /> },
@@ -248,6 +282,9 @@ function WebsiteDashboard() {
             { value: "exit", label: "Exit", icon: () => <LogOutIcon /> },
           ]}
         />
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-3">
         <TabbedList
           title="Sources"
           description="Where your visitors come from"
@@ -257,13 +294,13 @@ function WebsiteDashboard() {
               value: "referrer",
               label: "Referrers",
               icon: () => <ShareIcon />,
-              label_: (r) => r.x || "Direct / none",
+              rowLabel: (r) => r.x || "Direct / none",
             },
             {
               value: "channel",
               label: "Channels",
               icon: () => <CompassIcon />,
-              label_: (r) => (
+              rowLabel: (r) => (
                 <span className="capitalize">{r.x || "direct"}</span>
               ),
             },
@@ -278,9 +315,9 @@ function WebsiteDashboard() {
               value: "country",
               label: "Countries",
               icon: (r) => flag(r.x),
-              label_: (r) => countryName(r.x),
+              rowLabel: (r) => countryName(r.x),
             },
-            { value: "city", label: "Cities", icon: () => <CompassIcon /> },
+            { value: "city", label: "Cities", icon: () => <MapPinIcon /> },
           ]}
         />
         <TabbedList
@@ -290,16 +327,16 @@ function WebsiteDashboard() {
           tabs={[
             {
               value: "browser",
-              label: "Browsers",
+              label: "Browser",
               icon: () => <CompassIcon />,
-              label_: (r) => <span className="capitalize">{r.x}</span>,
+              rowLabel: (r) => <span className="capitalize">{r.x}</span>,
             },
             { value: "os", label: "OS", icon: () => <MonitorIcon /> },
             {
               value: "device",
-              label: "Devices",
+              label: "Device",
               icon: (r) => DEVICE_ICONS[r.x] ?? <MonitorIcon />,
-              label_: (r) => <span className="capitalize">{r.x}</span>,
+              rowLabel: (r) => <span className="capitalize">{r.x}</span>,
             },
           ]}
         />
@@ -309,6 +346,7 @@ function WebsiteDashboard() {
         title="Events"
         description="Custom events tracked on this website"
         metrics={metrics}
+        unit="events"
         tabs={[
           {
             value: "event",
